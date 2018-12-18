@@ -14,6 +14,7 @@ var numGenerations = 4; //How many generations the pedigree chart should span (m
 var numParents = 2; //Generally leave this at 2 unless you have a weird race that requires more or fewer than two parents to give birth a new individual (must be integer >= 1)
 var box = {height:50, width:100, border:"black", fill:"white", posX:0, posY:0};
 var connector = 50; //The width of the space between boxes of different generations
+var pedigree = generatePedigree();
 var vertSpacer = 25; //minimum vertical space between boxes of the same generation    
 
 //set canvas dimensions based on the number of generations and box size
@@ -94,7 +95,13 @@ function drawPedigree () {
             curY = 0;
             for (var j = 0; j < Math.pow(numParents, i - 1); j++) {
                 ctx.rect(curX, curY, box.width, box.height);
+                pedigree[curPerson].cx = curX;
+                pedigree[curPerson].cy = curY + (box.height / 2);
+                pedigree[curPerson].px = curX + box.width;
+                pedigree[curPerson].py = curY + (box.height / 2);
+                console.log("cx " + pedigree[curPerson].cx + " cy " + pedigree[curPerson].cy + " px " + pedigree[curPerson].px + " py " + pedigree[curPerson].py);
                 curY += (box.height + vertSpacer);
+                curPerson++;
             }
         } else {
             topPoint = Math.floor(calcBoundaryPoint(Math.pow(numParents, i - 1), c.height));
@@ -109,11 +116,16 @@ function drawPedigree () {
             for (var j = 0; j < Math.pow(numParents, i - 1); j++) {
                 ctx.rect(curX, curY, box.width, box.height);
                 console.log("Inner curY is " + curY + "px");
-                curY += distCenter;
+                
                 // test code
-                var testperson = createPerson(curPerson);
-                console.log("curPerson is " + curPerson + ", name is " + testperson.name + ", and age is " + testperson.age)
+                pedigree[curPerson].cx = curX;
+                pedigree[curPerson].cy = curY + (box.height / 2);
+                pedigree[curPerson].px = curX + box.width;
+                pedigree[curPerson].py = curY + (box.height / 2);
+                console.log("cx " + pedigree[curPerson].cx + " cy " + pedigree[curPerson].cy + " px " + pedigree[curPerson].px + " py " + pedigree[curPerson].py);
                 //end test code
+                
+                curY += distCenter;
                 curPerson++;
             }
             curX += (box.width + connector);
@@ -145,16 +157,35 @@ function generatePedigree () {
 }
     
 //test code
-var pedigree = generatePedigree();
+
 for (i = 0; i <= pedigree.length - 1; i++) {
     console.log("pedigree" + i + " is " + pedigree[i].name + " compared to 0, which is " + pedigree[0].name);
 }
+
+pedigree[0].ninja = "yes";
+console.log(pedigree[0].ninja);
     
 //end test
 
-//drawPedigree();
+drawPedigree();
+
 //drawConnectors(c.width - box.width, 100, c.width - box.width - connector, 75, "black", 2);
-    
+//okay so this is super kludgy but I don't care because I'm testing, so I'm going to manually specify the connection points to draw via function and i'll fix the math later
+drawConnectors(pedigree[1].cx, pedigree[1].cy, pedigree[0].px, pedigree[0].py, 2);
+drawConnectors(pedigree[2].cx, pedigree[2].cy, pedigree[0].px, pedigree[0].py, 2);
+drawConnectors(pedigree[3].cx, pedigree[3].cy, pedigree[1].px, pedigree[1].py, 2);
+drawConnectors(pedigree[4].cx, pedigree[4].cy, pedigree[1].px, pedigree[1].py, 2);
+drawConnectors(pedigree[5].cx, pedigree[5].cy, pedigree[2].px, pedigree[2].py, 2);
+drawConnectors(pedigree[6].cx, pedigree[6].cy, pedigree[2].px, pedigree[2].py, 2);
+drawConnectors(pedigree[7].cx, pedigree[7].cy, pedigree[3].px, pedigree[3].py, 2);
+drawConnectors(pedigree[8].cx, pedigree[8].cy, pedigree[3].px, pedigree[3].py, 2);
+drawConnectors(pedigree[9].cx, pedigree[9].cy, pedigree[4].px, pedigree[4].py, 2);
+drawConnectors(pedigree[10].cx, pedigree[10].cy, pedigree[4].px, pedigree[4].py, 2);
+drawConnectors(pedigree[11].cx, pedigree[11].cy, pedigree[5].px, pedigree[5].py, 2);
+drawConnectors(pedigree[12].cx, pedigree[12].cy, pedigree[5].px, pedigree[5].py, 2);
+drawConnectors(pedigree[13].cx, pedigree[13].cy, pedigree[6].px, pedigree[6].py, 2);
+drawConnectors(pedigree[14].cx, pedigree[14].cy, pedigree[6].px, pedigree[6].py, 2);
+
 </script>
 </body>
 </html>
