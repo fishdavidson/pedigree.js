@@ -8,9 +8,15 @@ It's a random generator that creates fictional lineages for new characters so th
 
 ## what it is not
 
-This is not and will never be an actual genealogical tool.
+This is not stable software. Anything prior to a 1.0.0 release should be considered to be pre-alpha software that you use at your own risk. 
+
+In addition, this is not and will never be an actual genealogical tool.
 
 ## features
+
+Here are a list of proposed features that I would like to see included in pedigree.js
+
+### 1.0.0 release features
 
 _The items in this list are subject to change, but what is listed below is what the 1.0.0 version is expected to have:_
 
@@ -24,3 +30,13 @@ _The items in this list are subject to change, but what is listed below is what 
  - [ ] Death events (natural, accidental, illness, crime, etc)
  - [ ] Random name generation from pool
  - [ ] Printer friendly output
+
+### features for future releases
+
+ - [ ] Wealth history
+ - [ ] Generational immigration history
+ - [ ] "Nontraditional" family types (multiple marriages, adoption)
+ - [ ] Relationship disposition/intensity
+ - [ ] Children for Individual 0
+ - [ ] Customizable pedigree boxes
+ - [ ] Printable/exportable family histories
