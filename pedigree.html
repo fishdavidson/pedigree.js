@@ -28,6 +28,13 @@ function calcBoundaryPoint (numItems, canvasHeight) {
     var startPoint = (1 / (numItems * 2)) * canvasHeight;
     return startPoint;
 }
+
+function calcChild (counter, numParents) {
+    var curColNum = 7;
+    var prevColNum = 3;
+    
+    return Math.floor((counter - curColNum) / numParents) + prevColNum;
+}
     
 function calcSpacing (bottom, top, numItems) {
     if (numItems <= 1) {
@@ -185,6 +192,8 @@ drawConnectors(pedigree[11].cx, pedigree[11].cy, pedigree[5].px, pedigree[5].py,
 drawConnectors(pedigree[12].cx, pedigree[12].cy, pedigree[5].px, pedigree[5].py, 2);
 drawConnectors(pedigree[13].cx, pedigree[13].cy, pedigree[6].px, pedigree[6].py, 2);
 drawConnectors(pedigree[14].cx, pedigree[14].cy, pedigree[6].px, pedigree[6].py, 2);
+    
+console.log("Child is " + calcChild(7, 2));
 
 </script>
 </body>
