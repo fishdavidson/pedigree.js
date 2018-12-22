@@ -1,12 +1,16 @@
 //https://eloquentjavascript.net/1st_edition/chapter4.html
-var c = document.getElementById("myCanvas");
+var c = document.getElementById("pedigreeCanvas");
 var ctx = c.getContext("2d");
+var cNuc = document.getElementById("nuclearCanvas");
+var ctxNuc = cNuc.getContext("2d");
 
 var numGenerations = 4; //How many generations the pedigree chart should span (must be greater than zero)
 var numParents = 2; //Generally leave this at 2 unless you have a weird race that requires more or fewer than two parents to give birth a new individual (must be integer >= 1)
-var box = {height:50, width:100, border:"black", fill:"white", posX:0, posY:0};
+var box = {height: 50, width: 100, border: "black", fill: "white", posX: 0, posY: 0};
+var childDeathRate = .3;
 var connector = 50; //The width of the space between boxes of different generations
 var header = {height: 100, width: 100, isEnabled: true};
+var maxSiblings = 7;
 var pedigree = generatePedigree();
 var vertSpacer = 25; //minimum vertical space between boxes of the same generation
 
@@ -229,6 +233,19 @@ function generatePedigree () {
         }
     }
     return pedArr;
+}
+
+function shuffleArray(array) {
+// Randomize array element order in-place.
+// Using Durstenfeld shuffle algorithm.
+
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
 }
 
 //test code
