@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html>
-<body>
 
-<canvas id="myCanvas" width="1000" height="1000" style="border:1px solid #d3d3d3;">
-Your browser does not support the HTML5 canvas tag.</canvas>
-
-<script>
 //https://eloquentjavascript.net/1st_edition/chapter4.html
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
@@ -16,12 +9,12 @@ var box = {height:50, width:100, border:"black", fill:"white", posX:0, posY:0};
 var connector = 50; //The width of the space between boxes of different generations
 var header = {height: 100, width: 100, isEnabled: true};
 var pedigree = generatePedigree();
-var vertSpacer = 25; //minimum vertical space between boxes of the same generation
+var vertSpacer = 25; //minimum vertical space between boxes of the same generation    
 
 //set canvas dimensions based on the number of generations and box size
 c.width = (numGenerations * box.width) + (connector * (numGenerations - 1));
 header.width = c.width;
-
+    
 if (header.isEnabled === true) {
     c.height = (Math.pow(numParents, (numGenerations - 1)) * box.height) + ((Math.pow(numParents, (numGenerations - 1)) - 1) * vertSpacer) + header.height;
 } else {
@@ -31,7 +24,7 @@ if (header.isEnabled === true) {
 console.log("Canvas height is: " + c.height + "px");
 console.log("Header height is: " + header.height + "px and width is: " + header.width + "px");
 
-//  calcBoundaryPoint is supposed to determine where to place the first/topmost
+//  calcBoundaryPoint is supposed to determine where to place the first/topmost 
 //  element of a column in the pedigree
 function calcBoundaryPoint (numItems, canvasHeight) {
     var startPoint = (1 / (numItems * 2)) * canvasHeight;
@@ -43,7 +36,7 @@ function calcChild (counter, numParents) {
     var prevColNum = 0; //value of the number at the top of the previous generation column
     var temp = 0; //holds values for curColNum and prevColNum
     var generation = 0;
-
+    
     if (counter <= 0) {
         return undefined;
     } else {
@@ -59,61 +52,43 @@ function calcChild (counter, numParents) {
         return Math.floor((counter - curColNum) / numParents) + prevColNum;
     }
 }
-
+    
 function calcSpacing (bottom, top, numItems) {
     if (numItems <= 1) {
         //this if statement is to avoid a divide by zero issue
         var spacing = 0;
     } else {
-        var spacing = (bottom - top) / (numItems - 1);
+        var spacing = (bottom - top) / (numItems - 1);   
     }
     return spacing;
 }
-
+    
 function calcVertOffset (numItems, canvasHeight) {
     var offset = canvasHeight / (numItems + 1);
     return offset;
 }
 
-function createPerson (test) {
-    var person = new Object();
-    switch (test % 2) {
-        case 0:
-            person.name = "Cheese";
-            person.age = 18;
-            break;
-        case 1:
-            person.name = "Toast";
-            person.age = 21;
-            break;
-        default:
-            person.name = "Nope";
-            person.age = 65;
-            break;
-    }
-    return person;
-}
 
 function drawConnectors (parentX, parentY, childX, childY, color, width) {
     ctx.beginPath();
     ctx.strokeStyle = color;
     ctx.lineWidth = width;
-
+        
     ctx.moveTo(parentX, parentY);
     ctx.lineTo(parentX - ((parentX - childX) / 2), parentY);
     ctx.lineTo(parentX - ((parentX - childX) / 2), childY);
     ctx.lineTo(childX, childY);
-
+    
     ctx.stroke();
 }
-
+    
 function drawHeader () {
     ctx.font = "30px Arial";
     ctx.fillStyle = "Black";
     ctx.textAlign = "end";
     ctx.fillText("Pedigree Chart  #___ of ___", c.width, 50);
 }
-
+    
 function drawPedigree () {
     var bottomPoint = 0; //bottom boundary for column
     var curPerson = 0;
@@ -122,13 +97,13 @@ function drawPedigree () {
     console.log(curY);
     var distCenter = 0; //distance between vertical centers
     var topPoint = 0; //top boundary for column
-
+    
     ctx.beginPath();
     ctx.strokeStyle = box.border;
     ctx.fillStyle = box.fill;
-
+    
     if (header.isEnabled === false) {
-
+        
         for (var i = 1; i <= numGenerations; i++) {
             if (i == numGenerations) {
                 curY = 0;
@@ -218,27 +193,60 @@ function drawPedigree () {
 
             //curY = (box.height / 2) * (-1);
             console.log(curY);
+
         }
     }
-
+    
     ctx.stroke();
 }
-
+function randBetween(a,b){
+  return a+(Math.random()*b);
+}
+function randomFirstName () {
+  return firstNames[Math.floor(Math.random()*firstNames.length)];
+}
+function randomLastName () {
+  return lastNames[Math.floor(Math.random()*lastNames.length)];
+}
 function generateName () {
-
+    return randomFirstName() + " " + randomLastName();
 }
-
-function generatePedigree () {
-    var pedArr = new Array();
-
-    for (var i = 1; i <= numGenerations; i++) {
-        for (var j = 0; j < Math.pow(numParents, i - 1); j++) {
-            pedArr.push(createPerson(i));
-        }
+function createPerson (child) {
+    var person = new Object();
+    switch (person) {
+        case 0:
+            person.name = generateName();
+            person.age = randBetween(13, 23);
+            break;
+        default:
+            var parent_age_at_birth=randBetween(15,35);
+            person.name = generateName();
+            person.age = child.age + parent_age_at_birth;
+            break;
     }
-    return pedArr;
+    return person;
 }
 
+function generateParents(child, generationsLeft){
+  if (!child.parents){
+    child.parents=[];
+  }
+  for(i=0; i<numParents; i++){
+    parent = createPerson(child);
+    child.parents.push();
+
+    if (generationsLeft) {
+      generateParents(child, generationsLeft - 1);
+    }
+  }
+}
+function generatePedigree () {
+  finalPerson=createPerson(0);
+
+  generateParents(finalPerson, numGenerations);
+  return pedArr;
+}
+    
 //test code
 
 for (i = 0; i <= pedigree.length - 1; i++) {
@@ -247,18 +255,16 @@ for (i = 0; i <= pedigree.length - 1; i++) {
 
 pedigree[0].ninja = "yes";
 console.log(pedigree[0].ninja);
-
+    
 //end test
 
 drawPedigree();
-drawHeader();
-
+//drawHeader();
+    
 for(var i = 1; i <= pedigree.length - 1; i++) {
     drawConnectors(pedigree[i].cx, pedigree[i].cy, pedigree[calcChild(i, numParents)].px, pedigree[calcChild(i, numParents)].py, "Black", 4);
     console.log("Child of " + i + " is " + calcChild(i, 2));
 }
 
 
-</script>
-</body>
-</html>
+
