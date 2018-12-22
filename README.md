@@ -23,13 +23,14 @@ _The items in this list are subject to change, but what is listed below is what 
  - [x] Customizable generation settings
  - [x] Exportable images
  - [ ] Cisgendered heteronormative parents
- - [ ] Dynamically-assigned connectors
- - [ ] Header information (with chart index)
+ - [x] Dynamically-assigned connectors
+ - [x] Header information (with chart index)
  - [ ] Missing parents (uncertain lineages)
  - [ ] Siblings
  - [ ] Death events (natural, accidental, illness, crime, etc)
  - [ ] Random name generation from pool
  - [ ] Printer friendly output
+ - [ ] Blank chart support
 
 ### features for future releases
 

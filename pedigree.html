@@ -14,7 +14,7 @@ var numGenerations = 4; //How many generations the pedigree chart should span (m
 var numParents = 2; //Generally leave this at 2 unless you have a weird race that requires more or fewer than two parents to give birth a new individual (must be integer >= 1)
 var box = {height:50, width:100, border:"black", fill:"white", posX:0, posY:0};
 var connector = 50; //The width of the space between boxes of different generations
-var header = {height: 100, width: 100, isEnabled: false};
+var header = {height: 100, width: 100, isEnabled: true};
 var pedigree = generatePedigree();
 var vertSpacer = 25; //minimum vertical space between boxes of the same generation    
 
@@ -194,7 +194,7 @@ function drawPedigree () {
                 console.log("topPoint is " + topPoint + "px");
                 bottomPoint = Math.floor(c.height - topPoint - header.height);
                 console.log("bottomPoint is " + bottomPoint + "px");
-                curY = Math.floor(calcBoundaryPoint(Math.pow(numParents, i - 1), c.height) + ((box.height / 2) * (-1))) + header.height;
+                curY = Math.floor(calcBoundaryPoint(Math.pow(numParents, i - 1), c.height - header.height) + ((box.height / 2) * (-1))) + header.height;
                 console.log("Outer curY is " + curY + "px");
                 distCenter = calcSpacing (bottomPoint, topPoint, Math.pow(numParents, i - 1));
                 console.log("DistCenter is " + distCenter);
