@@ -8,6 +8,28 @@
     
 <body>
 
+<form>
+    <fieldset>
+        <legend>Pedigree Control Panel</legend>
+        <p>These controls don't do anything yet.</p>
+        
+        <p><input id="numboxGenerations" type="number" min="1" max="16" value="4" required>
+        <label for="numboxGenerations">Total Generations to Include</label></p>
+        
+        <p><input id="showHeader" type="checkbox" name="showHeader" checked>
+        <label for="showHeader">Show Pedigree Header Bar</label><br />
+        
+        <input id="generateBlank" type="checkbox" name="generateBlank">
+        <label for="generateBlank">Generate Blank Pedigree Chart</label><br /></p>
+        
+        <p><input id="btnRedraw" type="button" name="btnRedraw" value="Redraw">
+        <input id="btnPrint" type="button" name="btnPrint" value="Print"></p>
+        
+        <p><input id="showAdv" type="checkbox" name="showAdvancedControls">
+        <label for="showAdv">Show Advanced Controls</label></p>
+    </fieldset>
+</form>
+
 <canvas id="pedigreeCanvas" width="1000" height="1000" style="border:1px solid #d3d3d3;">
 Your browser does not support the HTML5 canvas tag.</canvas>
 
