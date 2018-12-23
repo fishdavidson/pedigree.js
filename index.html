@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en-us">
 <head>
 
@@ -14,7 +15,12 @@
         <p>These controls don't do anything yet.</p>
         
         <p><input id="numboxGenerations" type="number" min="1" max="16" value="4" required>
-        <label for="numboxGenerations">Total Generations to Include</label></p>
+        <label for="numboxGenerations">Total Generations to Include*</label></p>
+
+        <p><input id="numboxBoxHeight" type="number" min="1" max="1024" value="25" required>
+        <label for="numboxBoxHeight">Box Height for Pedigree Entries (in pixels)*</label><br />
+        <input id="numboxBoxWidth" type="number" min="1" max="1024" value="100" required>
+        <label for="numboxBoxWidth">Box Width for Pedigree Entries (in pixels)*</label></p>
         
         <p><input id="showHeader" type="checkbox" name="showHeader" checked>
         <label for="showHeader">Show Pedigree Header Bar</label><br />
@@ -23,10 +29,13 @@
         <label for="generateBlank">Generate Blank Pedigree Chart</label><br /></p>
         
         <p><input id="btnRedraw" type="button" name="btnRedraw" value="Redraw">
-        <input id="btnPrint" type="button" name="btnPrint" value="Print"></p>
+        <input id="btnPrint" type="button" name="btnPrint" value="Print">
+        <input id="btnDrawNew" type="button" name="btnDrawNew" value="Draw New Pedigree"></p>
         
         <p><input id="showAdv" type="checkbox" name="showAdvancedControls">
         <label for="showAdv">Show Advanced Controls</label></p>
+        
+        <p>* indicates required field</p>
     </fieldset>
 </form>
 
@@ -37,6 +46,10 @@ Your browser does not support the HTML5 canvas tag.</canvas>
 
 <canvas id="nuclearCanvas" width="100" height="200" style="border:1px solid #d3d3d3;">
 Your browser does not support the HTML5 canvas tag.</canvas>
+
+<hr>
+
+<p>This generator was created by Fish Davidson. You may use its output in any project (even commercial ones) according to the terms of the AGPL-3.0 license. If you find this generator helpful or want to use it in a particularly cool project, please let me know. It's not required by the license, but it's a nice thing to do. I'd love to hear about how you're using this generator!</p>
 
 <script src="pedigree.js"></script>
 </body>
