@@ -7,11 +7,11 @@ var ctxNuc = cNuc.getContext("2d");
 var numGenerations = 4; //How many generations the pedigree chart should span (must be greater than zero)
 var numParents = 2; //Generally leave this at 2 unless you have a weird race that requires more or fewer than two parents to give birth a new individual (must be integer >= 1)
 var box = {height: 50, width: 100, border: "black", fill: "white", posX: 0, posY: 0};
-var childDeathRate = .3;
+var childDeathRate = 0.3;
 var connector = 50; //The width of the space between boxes of different generations
 var header = {height: 100, width: 100, isEnabled: true};
 var maxSiblings = 7;
-var pedigree = generatePedigree();
+var pedigree = parentsArray([],generatePedigree());
 var vertSpacer = 25; //minimum vertical space between boxes of the same generation
 
 //set canvas dimensions based on the number of generations and box size
@@ -71,6 +71,8 @@ function calcVertOffset (numItems, canvasHeight) {
     return offset;
 }
 
+/*
+//commenting this code out because ezmac created an identical function
 function createPerson (test) {
     var person = new Object();
     switch (test % 2) {
@@ -88,7 +90,7 @@ function createPerson (test) {
             break;
     }
     return person;
-}
+} */
 
 function drawConnectors (parentX, parentY, childX, childY, color, width) {
     ctx.beginPath();
@@ -220,10 +222,54 @@ function drawPedigree () {
     ctx.stroke();
 }
 
-function generateName () {
-
+function randBetween(a,b){
+    //randbetween is currently broken
+    return a + (Math.random() * b);
 }
 
+function randomFirstName () {
+    return firstNames[Math.floor(Math.random()*(firstNames.length - 1))];
+}
+
+function randomLastName () {
+	return lastNames[Math.floor(Math.random()*lastNames.length)];
+}
+
+function generateName () {
+    return randomFirstName() + " " + randomLastName();
+}
+
+function createPerson (child) {
+    var person = new Object();
+	switch (child) {
+        case 0:
+            person.name = generateName();
+            person.age = randBetween(13, 23);
+            break;
+        default:
+            var parent_age_at_birth=randBetween(15,35);
+            person.name = generateName();
+            person.age = child.age + parent_age_at_birth;
+            break;
+    }
+	return person;	
+}
+
+function generateParents(child, generationsLeft){
+    if (!child.parents){
+        child.parents=[];
+    }
+    if (generationsLeft) {
+        for(var i=0; i<numParents; i++){
+            var parent = createPerson(child);
+            child.parents.push(parent);
+            generateParents(parent, generationsLeft - 1);
+        }
+    }
+}
+
+/*
+//Original FishDavidson function, commenting out to test ezmac version
 function generatePedigree () {
     var pedArr = new Array();
 
@@ -233,6 +279,35 @@ function generatePedigree () {
         }
     }
     return pedArr;
+} */
+
+function generatePedigree () {
+    finalPerson=createPerson(0);
+    generateParents(finalPerson, numGenerations-1 );
+    return finalPerson;
+}
+
+//ezmac comments
+// I'm not doing great with functions and names but this works
+function parentsArray(current, person){
+    var arr=[];
+    var depth=numGenerations;
+    for( var i=0; i<=depth; i++){
+        arr = arr.concat(BFRDescent(person, i));
+    }
+    return arr;
+}
+
+function BFRDescent(tree, depth){
+    var generation=[];
+    var arr = [tree];
+    if (depth == 0) {return [tree];}
+    if (depth>0){
+        for (var j=0; j<tree.parents.length; j++) {
+            generation = generation.concat(BFRDescent(tree.parents[j], depth-1));
+        }
+    }
+    return generation;
 }
 
 function shuffleArray(array) {
@@ -251,7 +326,7 @@ function shuffleArray(array) {
 //test code
 
 for (i = 0; i <= pedigree.length - 1; i++) {
-    console.log("pedigree" + i + " is " + pedigree[i].name + " compared to 0, which is " + pedigree[0].name);
+    console.log("pedigree" + i + " is " + pedigree[i].name + " compared to 0, which is " + pedigree[0].name + " Age: " + pedigree[i].age);
 }
 
 pedigree[0].ninja = "yes";
