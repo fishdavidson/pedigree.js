@@ -112,6 +112,13 @@ function drawHeader () {
     ctx.fillText("Pedigree Chart  #___ of ___", c.width, 50);
 }
 
+function drawProperty (message, x, y) {
+    ctx.font = "12px serif";
+    ctx.fillStyle = "Red";
+    ctx.textAlign = "start";
+    ctx.fillText(message, x, y);
+}
+
 function drawPedigree () {
     var bottomPoint = 0; //bottom boundary for column
     var curPerson = 0;
@@ -223,12 +230,11 @@ function drawPedigree () {
 }
 
 function randBetween(a,b){
-    //randbetween is currently broken
     return a + (Math.random() * b);
 }
 
 function randomFirstName () {
-    return firstNames[Math.floor(Math.random()*(firstNames.length - 1))];
+    return firstNames[Math.floor(Math.random()*(firstNames.length))];
 }
 
 function randomLastName () {
@@ -336,8 +342,25 @@ console.log(pedigree[0].ninja);
 
 drawPedigree();
 drawHeader();
+//drawProperty(pedigree[4].name, 50, 50);
+
+for (var i = 0; i <= pedigree.length - 1; i++) {
+    drawProperty(pedigree[i].name, pedigree[i].cx + 10, pedigree[i].cy + 10);
+}
 
 for(var i = 1; i <= pedigree.length - 1; i++) {
     drawConnectors(pedigree[i].cx, pedigree[i].cy, pedigree[calcChild(i, numParents)].px, pedigree[calcChild(i, numParents)].py, "Black", 4);
     console.log("Child of " + i + " is " + calcChild(i, 2));
 }
+
+/* ctx.font = "12px serif";
+ctx.fillStyle = "Red";
+ctx.textAlign = "start";
+var text = ctx.measureText("Poopoo!");
+console.log(text.width);
+ctx.fillText("Poopoo!", 100, 200);
+
+ctx.font = "30px Arial";
+text = ctx.measureText("Poopoo!");
+console.log(text.width);
+ctx.fillText("Poopoo!", 150, 300); */
