@@ -6,13 +6,20 @@ var ctxNuc = cNuc.getContext("2d");
 
 var numGenerations = 4; //How many generations the pedigree chart should span (must be greater than zero)
 var numParents = 2; //Generally leave this at 2 unless you have a weird race that requires more or fewer than two parents to give birth a new individual (must be integer >= 1)
-var box = {height: 50, width: 100, border: "black", fill: "white", posX: 0, posY: 0};
+var box = {height: 75, width: 150, border: "black", fill: "white", posX: 0, posY: 0};
 var childDeathRate = 0.3;
 var connector = 50; //The width of the space between boxes of different generations
+var desiredYear = 0; //The year that the pedigree chart will "end" on
 var header = {height: 100, width: 100, isEnabled: true};
+var lnameProp = 0; //controls how last names are propagated. 0 is patriarchal, 1 is matriarchal, 2+ is something else
 var maxSiblings = 7;
+var marginBottom = 2;
+var marginLeft = 10;
+var marginRight = 10;
+var marginTop = 5;
 var pedigree = parentsArray([],generatePedigree());
 var vertSpacer = 25; //minimum vertical space between boxes of the same generation
+var year = 0; //origin year of the pedigree
 
 //set canvas dimensions based on the number of generations and box size
 c.width = (numGenerations * box.width) + (connector * (numGenerations - 1));
@@ -91,6 +98,10 @@ function createPerson (test) {
     }
     return person;
 } */
+
+function causeOfDeath () {
+    return deathIllness[Math.floor(Math.random() * (deathIllness.length))];
+}
 
 function drawConnectors (parentX, parentY, childX, childY, color, width) {
     ctx.beginPath();
@@ -237,6 +248,14 @@ function randomFirstName () {
     return firstNames[Math.floor(Math.random()*(firstNames.length))];
 }
 
+function fnameF () {
+    return fnameFemale[Math.floor(Math.random()*(fnameFemale.length))];
+}
+
+function fnameM () {
+    return fnameMale[Math.floor(Math.random() * (fnameMale.length))];
+}
+
 function randomLastName () {
 	return lastNames[Math.floor(Math.random()*lastNames.length)];
 }
@@ -353,12 +372,12 @@ for(var i = 1; i <= pedigree.length - 1; i++) {
     console.log("Child of " + i + " is " + calcChild(i, 2));
 }
 
-/* ctx.font = "12px serif";
+/*ctx.font = "12px serif";
 ctx.fillStyle = "Red";
 ctx.textAlign = "start";
 var text = ctx.measureText("Poopoo!");
 console.log(text.width);
-ctx.fillText("Poopoo!", 100, 200);
+ctx.fillText(causeOfDeath(), 100, 200);
 
 ctx.font = "30px Arial";
 text = ctx.measureText("Poopoo!");
