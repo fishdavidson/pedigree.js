@@ -12,12 +12,14 @@ var connector = 50; //The width of the space between boxes of different generati
 var desiredYear = 0; //The year that the pedigree chart will "end" on
 var header = {height: 100, width: 100, isEnabled: true};
 var lnameProp = 0; //controls how last names are propagated. 0 is patriarchal, 1 is matriarchal, 2+ is something else
+var maxAge = 100;
 var maxSiblings = 7;
 var marginBottom = 2;
 var marginLeft = 10;
 var marginRight = 10;
 var marginTop = 5;
 var pedigree = parentsArray([],generatePedigree());
+var sexualMaturityAge = 16;
 var vertSpacer = 25; //minimum vertical space between boxes of the same generation
 var year = 0; //origin year of the pedigree
 
@@ -241,7 +243,7 @@ function drawPedigree () {
 }
 
 function randBetween(a,b){
-    return a + (Math.random() * b);
+    return a + Math.floor(Math.random() * b);
 }
 
 function randomFirstName () {
@@ -278,6 +280,22 @@ function createPerson (child) {
             break;
     }
 	return person;	
+}
+
+function createMale () {
+    var person = new Object();
+    person.name = fnameM();
+    person.sex = "male";
+    person.lifespan = randBetween(sexualMaturityAge, maxAge);
+    person.born = 1000;
+}
+
+function createFemale () {
+    var person = new Object();
+    person.name = fnamef();
+    person.sex = "female";
+    person.lifespan = randBetween(sexualMaturityAge, maxAge);
+    person.born = 1000;
 }
 
 function generateParents(child, generationsLeft){
