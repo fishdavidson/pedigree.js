@@ -25,7 +25,7 @@ var sexualMaturityAge = 16;
 var vertSpacer = 25; //minimum vertical space between boxes of the same generation
 var year = 0; //origin year of the pedigree
 
-var pedigree = parentsArray([],generatePedigree()); //contains an array of person objects
+var pedigree = parentsArray(generatePedigree()); //contains an array of person objects
 
 //set canvas dimensions based on the number of generations and box size
 c.width = (numGenerations * box.width) + (connector * (numGenerations - 1));
@@ -37,8 +37,8 @@ if (header.isEnabled === true) {
     c.height = (Math.pow(numParents, (numGenerations - 1)) * box.height) + ((Math.pow(numParents, (numGenerations - 1)) - 1) * vertSpacer);
 }
 
-console.log("Canvas height is: " + c.height + "px");
-console.log("Header height is: " + header.height + "px and width is: " + header.width + "px");
+//console.log("Canvas height is: " + c.height + "px");
+//console.log("Header height is: " + header.height + "px and width is: " + header.width + "px");
 
 //  calcBoundaryPoint is supposed to determine where to place the first/topmost
 //  element of a column in the pedigree
@@ -64,7 +64,7 @@ function calcChild (counter, numParents) {
             }
             generation++;
         }
-        console.log("Final temp " + temp + " curColNum " + curColNum + " prevColNum " + prevColNum);
+        //console.log("Final temp " + temp + " curColNum " + curColNum + " prevColNum " + prevColNum);
         return Math.floor((counter - curColNum) / numParents) + prevColNum;
     }
 }
@@ -84,36 +84,15 @@ function calcVertOffset (numItems, canvasHeight) {
     return offset;
 }
 
-/*
-//commenting this code out because ezmac created an identical function
-function createPerson (test) {
-    var person = new Object();
-    switch (test % 2) {
-        case 0:
-            person.fname = "Cheese";
-            person.age = 18;
-            break;
-        case 1:
-            person.fname = "Toast";
-            person.age = 21;
-            break;
-        default:
-            person.fname = "Nope";
-            person.age = 65;
-            break;
-    }
-    return person;
-} */
-
 function causeOfDeath () {
     return deathIllness[Math.floor(Math.random() * (deathIllness.length))];
 }
 
 function checkDeath (person) {
-    console.log("Death check age: " + person.age + " " + person.isAlive + " " + person.lifespan);
+    //console.log("Death check age: " + person.age + " " + person.isAlive + " " + person.lifespan);
     if (person.age >= person.lifespan) {
         person.isAlive = false;
-        console.log("Age: " + person.age + "Lifespan: " + person.lifespan);
+        //console.log("Age: " + person.age + "Lifespan: " + person.lifespan);
     }
 }
 
@@ -149,7 +128,7 @@ function drawPedigree () {
     var curPerson = 0;
     var curX = 0;
     var curY = 0;
-    console.log(curY);
+    //console.log(curY);
     var distCenter = 0; //distance between vertical centers
     var topPoint = 0; //top boundary for column
 
@@ -168,30 +147,30 @@ function drawPedigree () {
                     pedigree[curPerson].cy = curY + (box.height / 2);
                     pedigree[curPerson].px = curX + box.width;
                     pedigree[curPerson].py = curY + (box.height / 2);
-                    console.log("cx " + pedigree[curPerson].cx + " cy " + pedigree[curPerson].cy + " px " + pedigree[curPerson].px + " py " + pedigree[curPerson].py);
+                    //console.log("cx " + pedigree[curPerson].cx + " cy " + pedigree[curPerson].cy + " px " + pedigree[curPerson].px + " py " + pedigree[curPerson].py);
                     curY += (box.height + vertSpacer);
                     curPerson++;
                 }
             } else {
                 topPoint = Math.floor(calcBoundaryPoint(Math.pow(numParents, i - 1), c.height));
-                console.log("topPoint is " + topPoint + "px");
+                //console.log("topPoint is " + topPoint + "px");
                 bottomPoint = Math.floor(c.height - topPoint);
-                console.log("bottomPoint is " + bottomPoint + "px");
+                //console.log("bottomPoint is " + bottomPoint + "px");
                 curY = Math.floor(calcBoundaryPoint(Math.pow(numParents, i - 1), c.height) + ((box.height / 2) * (-1)));
-                console.log("Outer curY is " + curY + "px");
+                //console.log("Outer curY is " + curY + "px");
                 distCenter = calcSpacing (bottomPoint, topPoint, Math.pow(numParents, i - 1));
-                console.log("DistCenter is " + distCenter);
+                //console.log("DistCenter is " + distCenter);
                 //distCenter = Math.floor((c.height - (calcBoundaryPoint(Math.pow(numParents, i - 1), c.height) * 2)) / Math.pow(numParents, i - 1));
                 for (var j = 0; j < Math.pow(numParents, i - 1); j++) {
                     ctx.rect(curX, curY, box.width, box.height);
-                    console.log("Inner curY is " + curY + "px");
+                    //console.log("Inner curY is " + curY + "px");
 
                     // test code
                     pedigree[curPerson].cx = curX;
                     pedigree[curPerson].cy = curY + (box.height / 2);
                     pedigree[curPerson].px = curX + box.width;
                     pedigree[curPerson].py = curY + (box.height / 2);
-                    console.log("cx " + pedigree[curPerson].cx + " cy " + pedigree[curPerson].cy + " px " + pedigree[curPerson].px + " py " + pedigree[curPerson].py);
+                    //console.log("cx " + pedigree[curPerson].cx + " cy " + pedigree[curPerson].cy + " px " + pedigree[curPerson].px + " py " + pedigree[curPerson].py);
                     //end test code
 
                     curY += distCenter;
@@ -201,7 +180,7 @@ function drawPedigree () {
             }
 
             //curY = (box.height / 2) * (-1);
-            console.log(curY);
+            //console.log(curY);
 
         }
     } else {
@@ -214,30 +193,30 @@ function drawPedigree () {
                     pedigree[curPerson].cy = curY + (box.height / 2);
                     pedigree[curPerson].px = curX + box.width;
                     pedigree[curPerson].py = curY + (box.height / 2);
-                    console.log("cx " + pedigree[curPerson].cx + " cy " + pedigree[curPerson].cy + " px " + pedigree[curPerson].px + " py " + pedigree[curPerson].py);
+                    //console.log("cx " + pedigree[curPerson].cx + " cy " + pedigree[curPerson].cy + " px " + pedigree[curPerson].px + " py " + pedigree[curPerson].py);
                     curY += (box.height + vertSpacer);
                     curPerson++;
                 }
             } else {
                 topPoint = Math.floor(calcBoundaryPoint(Math.pow(numParents, i - 1), c.height - header.height));
-                console.log("topPoint is " + topPoint + "px");
+                //console.log("topPoint is " + topPoint + "px");
                 bottomPoint = Math.floor(c.height - topPoint - header.height);
-                console.log("bottomPoint is " + bottomPoint + "px");
+                //console.log("bottomPoint is " + bottomPoint + "px");
                 curY = Math.floor(calcBoundaryPoint(Math.pow(numParents, i - 1), c.height - header.height) + ((box.height / 2) * (-1))) + header.height;
-                console.log("Outer curY is " + curY + "px");
+                //console.log("Outer curY is " + curY + "px");
                 distCenter = calcSpacing (bottomPoint, topPoint, Math.pow(numParents, i - 1));
-                console.log("DistCenter is " + distCenter);
+                //console.log("DistCenter is " + distCenter);
                 //distCenter = Math.floor((c.height - (calcBoundaryPoint(Math.pow(numParents, i - 1), c.height) * 2)) / Math.pow(numParents, i - 1));
                 for (var j = 0; j < Math.pow(numParents, i - 1); j++) {
                     ctx.rect(curX, curY, box.width, box.height);
-                    console.log("Inner curY is " + curY + "px");
+                    //console.log("Inner curY is " + curY + "px");
 
                     // test code
                     pedigree[curPerson].cx = curX;
                     pedigree[curPerson].cy = curY + (box.height / 2);
                     pedigree[curPerson].px = curX + box.width;
                     pedigree[curPerson].py = curY + (box.height / 2);
-                    console.log("cx " + pedigree[curPerson].cx + " cy " + pedigree[curPerson].cy + " px " + pedigree[curPerson].px + " py " + pedigree[curPerson].py);
+                    //console.log("cx " + pedigree[curPerson].cx + " cy " + pedigree[curPerson].cy + " px " + pedigree[curPerson].px + " py " + pedigree[curPerson].py);
                     //end test code
 
                     curY += distCenter;
@@ -247,7 +226,7 @@ function drawPedigree () {
             }
 
             //curY = (box.height / 2) * (-1);
-            console.log(curY);
+            //console.log(curY);
         }
     }
 
@@ -284,21 +263,22 @@ function createPerson (child) {
     person.isAlive = true;
     
 	switch (child) {
-        case 0:
+        case 0: //sets initial properties for Person 0
             //var person = randGender();
             //person.fname = generateName();
             randGender(person);
             person.lname = randomLastName();
             person.age = charStartAge;
+            person.lifespan = randBetween(charStartAge + 1, maxAge); //ensure Person 0 is never dead
             break;
         default:
             //var person = new Object();
             var parent_age_at_birth=randBetween(15,35);
-            person.fname = randomFirstName();
-            person.lname = randomLastName();
+            //person.fname = randomFirstName();
+            //person.lname = randomLastName();
             person.age = child.age + parent_age_at_birth;
-            person.lifespan = randBetween(sexualMaturityAge, maxAge);
-            console.log("Lifespan is " + person.lifespan);
+            //person.lifespan = randBetween(sexualMaturityAge, maxAge);
+            //console.log("Lifespan is " + person.lifespan);
             break;
     }
 	return person;	
@@ -307,7 +287,7 @@ function createPerson (child) {
 function setMale (person) {
     //var person = new Object();
     person.fname = fnameM();
-    person.lname = "uncalculated";
+    person.lname = undefined;
     person.sex = "male";
     person.lifespan = randBetween(sexualMaturityAge, maxAge);
     person.born = 0;
@@ -317,7 +297,7 @@ function setMale (person) {
 function setFemale (person) {
     //var person = new Object();
     person.fname = fnameF();
-    person.lname = "uncalculated";
+    person.lname = undefined;
     person.sex = "female";
     person.lifespan = randBetween(sexualMaturityAge, maxAge);
     person.born = 0;
@@ -327,7 +307,7 @@ function setFemale (person) {
 function setOther (person) {
     //var person = new Object();
     person.fname = randomFirstName();
-    person.lname = "uncalculated";
+    person.lname = undefined;
     person.sex = "other";
     person.lifespan = randBetween(sexualMaturityAge, maxAge);
     person.born = 0;
@@ -350,14 +330,34 @@ function randGender (person) {
 }
 
 function generateParents(child, generationsLeft){
+    // if a child has no .parents property, set the property to an empty array
     if (!child.parents){
         child.parents=[];
     }
+    //if generationsLeft is initialized, begin for loop
     if (generationsLeft) {
         for(var i=0; i<numParents; i++){
-            var parent = createPerson(child);
-            child.parents.push(parent);
-            generateParents(parent, generationsLeft - 1);
+            var parent = createPerson(child); //create a person to be the parent
+            //set gender according to the number of parents
+            switch (i) {
+                case 0:
+                    setMale(parent);
+                    if (lnameProp == 0) {parent.lname = set_parent_lname(child);}
+                    else {parent.lname = randomLastName();}
+                    break;
+                case 1:
+                    setFemale(parent);
+                    if (lnameProp == 1) {parent.lname = set_parent_lname(child);}
+                    else {parent.lname = randomLastName();}
+                    break;
+                default:
+                    setOther(person);
+                    if (lnameProp >= 2) {parent.lname = set_parent_lname(child);}
+                    else {parent.lname = randomLastName();}
+                    break;
+            }
+            child.parents.push(parent); //push the parent to the end of the .parents array
+            generateParents(parent, generationsLeft - 1); //recurse through the pedigree and populate it
         }
     }
 }
@@ -376,31 +376,38 @@ function generatePedigree () {
 } */
 
 function generatePedigree () {
-    finalPerson=createPerson(0);
-    generateParents(finalPerson, numGenerations - 1);
+    finalPerson=createPerson(0); //creates Person 0
+    generateParents(finalPerson, numGenerations - 1); //assigns .parents property to person 0
     return finalPerson;
 }
 
 //ezmac comments
 // I'm not doing great with functions and names but this works
-function parentsArray(current, person){
+// this function controls depth and appends the array in the right order
+function parentsArray(person){
     var arr = [];
     var depth = numGenerations;
+    //iterate through the generations, concatenating the results of BFRDescent to arr[]
     for( var i = 0; i <= depth; i++){
+        console.log("parentsArray i = " + i);
+        console.log(arr);
         arr = arr.concat(BFRDescent(person, i));
     }
     return arr;
 }
 
 function BFRDescent(tree, depth){
+    //returns an array of all the people of a certain depth
     var generation= [];
-    var arr = [tree];
-    if (depth == 0) {return [tree];}
+    if (depth == 0) {return [tree];} //return [tree] if at origin node (person 0)
+    //otherwise recurse through the depths of the tree
     if (depth > 0){
         for (var j = 0; j < tree.parents.length; j++) {
             generation = generation.concat(BFRDescent(tree.parents[j], depth-1));
         }
     }
+    console.log("BFRD j:" + j);
+    console.log(generation);
     return generation;
 }
 
@@ -417,14 +424,50 @@ function shuffleArray(array) {
     return array;
 }
 
+function set_parent_lname (child) {
+    var lastname = "LAST_NAME";
+    switch (lnameProp) {
+        case 0:
+            lastname = child.lname;
+            break;
+        case 1:
+            lastname = child.parents[1].lname;
+            break;
+        default:
+            lastname = randomLastName();
+            break;
+    }
+    return lastname
+}
+
+function calculate_lname (propStyle, person) {
+    var lastname = "LAST_NAME";
+    switch (propStyle) {
+        case 0:
+            lastname = person.parents[0].lname;
+            break;
+        case 1:
+            lastname = person.parents[1].lname;
+            break;
+        default:
+            lastname = randomLastName();
+            break;
+    }
+    return lastname
+}
+
+function proplname () {
+    var depth = 4;
+    if (depth == 4) {
+        calculate_lname();
+    }
+}
+
 //test code
 
 for (i = 0; i <= pedigree.length - 1; i++) {
     console.log("pedigree" + i + " is " + pedigree[i].fname + " compared to 0, which is " + pedigree[0].fname + " Age: " + pedigree[i].age);
 }
-
-pedigree[0].ninja = "yes";
-console.log(pedigree[0].ninja);
 
 //end test
 
@@ -446,9 +489,9 @@ for(var i = 1; i <= pedigree.length - 1; i++) {
     console.log("Child of " + i + " is " + calcChild(i, 2));
 }
 
-for (var i = 0; i <= 100; i++) {
+/*for (var i = 0; i <= 100; i++) {
     console.log("Testing Randbetween(15,100)" + randBetween(15, 100));
-}
+} */
 
 /*ctx.font = "12px serif";
 ctx.fillStyle = "Red";
