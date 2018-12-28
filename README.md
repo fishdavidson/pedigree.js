@@ -51,3 +51,5 @@ _The items in this list are subject to change, but what is listed below is what 
  - [ ] Printable/exportable family histories
  - [ ] Nicknames
  - [ ] Suffixes (Sr, Jr, III, IV, etc)
+ - [ ] Toggles to switch between common, regional, or extended name banks
+ - [ ] Modification tutorials
