@@ -30,6 +30,7 @@ var marginBottom = 2;
 var marginLeft = 10;
 var marginRight = 10;
 var marginTop = 5;
+var propertyFontSize = 12;
 var sexualMaturityAge = 16;
 var sexualMaturityEnd = 35;
 var vertSpacer = 25; //minimum vertical space between boxes of the same generation
@@ -130,8 +131,8 @@ function drawHeader () {
     }
 }
 
-function drawProperty (message, x, y) {
-    ctx.font = "12px serif";
+function drawProperty (message, x, y, fontSize) {
+    ctx.font = fontSize +"px serif";
     ctx.fillStyle = "Red";
     ctx.textAlign = "start";
     ctx.fillText(message, x, y);
@@ -433,9 +434,9 @@ function redraw () {
     for (var i = 0; i <= pedigree.length - 1; i++) {
         checkDeath(pedigree[i]);
         if (pedigree[i].isAlive == false) {
-            drawProperty(pedigree[i].fname + " " + pedigree[i].lname + " (D)", pedigree[i].cx + 10, pedigree[i].cy + 10);  
+            drawProperty(pedigree[i].fname + " " + pedigree[i].lname + " (D)", pedigree[i].cx + 10, pedigree[i].cy + 10, propertyFontSize);  
         } else {
-            drawProperty(pedigree[i].fname + " " + pedigree[i].lname, pedigree[i].cx + 10, pedigree[i].cy + 10);   
+            drawProperty(pedigree[i].fname + " " + pedigree[i].lname, pedigree[i].cx + 10, pedigree[i].cy + 10, propertyFontSize);   
         }
 }
 
@@ -444,15 +445,28 @@ function redraw () {
     }
 }
 
-function writePedQuickView () {
-    for (var i = 0; i <= pedigree.length - 1; i++) {
-        checkDeath(pedigree[i]);
-        if (pedigree[i].isAlive == false) {
-            drawProperty(pedigree[i].fname + " " + pedigree[i].lname + " (D)", pedigree[i].cx + 10, pedigree[i].cy + 10);  
-        } else {
-            drawProperty(pedigree[i].fname + " " + pedigree[i].lname, pedigree[i].cx + 10, pedigree[i].cy + 10);
-        }
+function writePedQuickView (person) {
+    var lineSpacing = propertyFontSize * 1.4;
+    var linePosY = person.cy - (box.height / 2) + propertyFontSize + marginTop; //gets line position to top
+    var linePosX = person.cx + marginLeft; //indents the text just a little
+    
+    person.born = calcYear(year, person.age); //calculates person's birth year
+    
+    checkDeath(person);
+    if (person.isAlive == false) {
+        drawProperty(person.fname + " " + person.lname + " (D)", linePosX, linePosY, propertyFontSize);
+        linePosY += lineSpacing;
+        drawProperty(person.born + " - " + (person.born + person.lifespan), linePosX, linePosY, propertyFontSize);
+        linePosY += lineSpacing;
+        drawProperty(person.lifespan + " years old", linePosX, linePosY, propertyFontSize);
+    } else {
+        drawProperty(person.fname + " " + person.lname, linePosX, linePosY, propertyFontSize);
+        linePosY += lineSpacing;
+        drawProperty(person.born + " - ", linePosX, linePosY, propertyFontSize);
+        linePosY += lineSpacing;
+        drawProperty(person.age + " years old", linePosX, linePosY, propertyFontSize);
     }
+
 }
 
 function drawNewChart () {
@@ -465,7 +479,9 @@ function drawNewChart () {
         pedigree = parentsArray(generatePedigree());
         drawPedigree();
         drawHeader();
-        writePedQuickView();
+        for (var i = 0; i < pedigree.length; i++) {
+            writePedQuickView(pedigree[i]);   
+        }
     }
     
     for(var i = 1; i <= pedigree.length - 1; i++) {
@@ -573,9 +589,9 @@ drawHeader();
 for (var i = 0; i <= pedigree.length - 1; i++) {
     checkDeath(pedigree[i]);
     if (pedigree[i].isAlive == false) {
-        drawProperty(pedigree[i].fname + " " + pedigree[i].lname + " (D)", pedigree[i].cx + 10, pedigree[i].cy + 10);  
+        drawProperty(pedigree[i].fname + " " + pedigree[i].lname + " (D)", pedigree[i].cx + 10, pedigree[i].cy + 10, propertyFontSize);  
     } else {
-        drawProperty(pedigree[i].fname + " " + pedigree[i].lname, pedigree[i].cx + 10, pedigree[i].cy + 10);   
+        drawProperty(pedigree[i].fname + " " + pedigree[i].lname, pedigree[i].cx + 10, pedigree[i].cy + 10, propertyFontSize);   
     }
 }
 
