@@ -52,11 +52,14 @@ var pedigree = parentsArray(generatePedigree()); //contains an array of person o
 c.width = (numGenerations * box.width) + (connector * (numGenerations - 1));
 header.width = c.width;
 
+c.height = calcCanvasHeight();
+/*
 if (header.isEnabled === true) {
     c.height = (Math.pow(numParents, (numGenerations - 1)) * box.height) + ((Math.pow(numParents, (numGenerations - 1)) - 1) * vertSpacer) + header.height;
 } else {
     c.height = (Math.pow(numParents, (numGenerations - 1)) * box.height) + ((Math.pow(numParents, (numGenerations - 1)) - 1) * vertSpacer);
 }
+*/
 
 //console.log("Canvas height is: " + c.height + "px");
 //console.log("Header height is: " + header.height + "px and width is: " + header.width + "px");
@@ -92,7 +95,9 @@ function calcCanvasHeight () {
         containerSiblings.stopY = maxHeight;
         maxHeight += canMarginBottom;
     }
+    containerFooter.startY = maxHeight;
     maxHeight += containerFooter.height;
+    containerFooter.stopY = maxHeight;
     return maxHeight;
 }
 
@@ -200,6 +205,13 @@ function drawConnectors (parentX, parentY, childX, childY, color, width) {
     ctx.lineTo(childX, childY);
 
     ctx.stroke();
+}
+
+function drawFooter () {
+    ctx.font = "18px Arial";
+    ctx.fillStyle = "Black";
+    ctx.textAlign = "start";
+    ctx.fillText("(c) Fish Davidson 2018 - www.fishdavidson.com", 20, containerFooter.stopY - 10);
 }
 
 function drawHeader () {
@@ -667,6 +679,7 @@ for (i = 0; i <= pedigree.length - 1; i++) {
 
 drawPedigree();
 drawHeader();
+drawFooter();
 //drawProperty(pedigree[4].fname, 50, 50);
 
 for (var i = 0; i <= pedigree.length - 1; i++) {
