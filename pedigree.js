@@ -10,13 +10,23 @@ var box = {height: parseInt(document.getElementById("numboxBoxHeight").value, 10
            fill: "white", 
            posX: 0, 
            posY: 0}; //initialize box object with default values
+var pedChart = {height: 100,
+               width: 100};
 //box.height = 75; document.getElementById("numboxBoxHeight").value;
 //box.width = document.getElementById("numboxBoxWidth").value;
 var charStartAge = 18; //age at which Person 0 will be when the pedigree is generated
 var childDeathRate = 0.3;
 var connector = 50; //The width of the space between boxes of different generations
+var containerFooter = {height: 50, width: 100};
+var containerSiblings = {height: 100, width: 100, spaceBetween: 50, connectorHeight: 25};
+if (document.getElementById("chkShowSiblings").checked) {
+    generateSiblings();
+    calcSiblingSize();
+}
 var desiredYear = 0; //The year that the pedigree chart will "end" on
-var header = {height: 100, width: 100, isEnabled: true};
+var header = {height: 100,
+              width: 100,
+              isEnabled: true};
 var immigrationRate = 0.2;
 var lnameProp = 0; //controls how last names are propagated. 0 is patriarchal, 1 is matriarchal, 2+ is something else
 var maxAge = 100;
@@ -25,7 +35,7 @@ var maxChildrenPerFam = 8;
 var canMarginBottom = 10;
 var canMarginLeft = 10;
 var canMarginRight = 10;
-var CanMarginTop = 10;
+var canMarginTop = 10;
 var marginBottom = 2;
 var marginLeft = 10;
 var marginRight = 10;
@@ -56,6 +66,78 @@ if (header.isEnabled === true) {
 function calcBoundaryPoint (numItems, canvasHeight) {
     var startPoint = (1 / (numItems * 2)) * canvasHeight;
     return startPoint;
+}
+
+function calcCanvasSize () {
+    c.width = calcCanvasWidth();
+    c.height = calcCanvasHeight();
+}
+
+function calcCanvasHeight () {
+    var maxHeight = 0;
+    if (document.getElementById("chkShowHeader").checked) {
+        header.startY = maxHeight;
+        maxHeight += header.height;
+        header.stopY = maxHeight;
+    }
+    maxHeight += canMarginTop;
+    pedChart.startY = maxHeight;
+    maxHeight += (Math.pow(numParents, (numGenerations - 1)) * box.height) + ((Math.pow(numParents, (numGenerations - 1)) - 1) * vertSpacer);
+    pedChart.stopY = maxHeight;
+    maxHeight += canMarginBottom;
+    if (document.getElementById("chkShowSiblings").checked) {
+        maxHeight += canMarginTop;
+        containerSiblings.startY = maxHeight;
+        maxHeight += containerSiblings.height;
+        containerSiblings.stopY = maxHeight;
+        maxHeight += canMarginBottom;
+    }
+    maxHeight += containerFooter.height;
+    return maxHeight;
+}
+
+function calcCanvasWidth () {
+    var maxWidth = 0
+    return maxWidth;
+}
+
+function calcSiblingSize () {
+    
+}
+
+function createSibling () {
+    // THIS FUNCTION DOESN'T WORK YET
+    var person = new Object();
+    person.isAlive = true;
+    
+	switch (child) {
+        case 0: //sets initial properties for Person 0
+            //var person = randGender();
+            //person.fname = generateName();
+            randGender(person);
+            person.lname = randomLastName();
+            person.age = charStartAge;
+            person.lifespan = randBetween(charStartAge + 1, maxAge); //ensure Person 0 is never dead
+            break;
+        default:
+            //var person = new Object();
+            var parent_age_at_birth=randBetween(sexualMaturityAge, sexualMaturityEnd);
+            //person.fname = randomFirstName();
+            //person.lname = randomLastName();
+            person.age = child.age + parent_age_at_birth;
+            //person.lifespan = randBetween(sexualMaturityAge, maxAge);
+            //console.log("Lifespan is " + person.lifespan);
+            break;
+    }
+	return person;	
+}
+
+function generateSiblings (person) {
+    var siblingArray = [person];
+    var numSiblings = randBetween(0, maxChildrenPerFam - 1);
+    for (var i = 1; i < numSiblings; i++) {
+        siblingArray.push
+    }
 }
 
 function calcChild (counter, numParents) {
@@ -487,6 +569,7 @@ function drawNewChart () {
     for(var i = 1; i <= pedigree.length - 1; i++) {
         drawConnectors(pedigree[i].cx, pedigree[i].cy, pedigree[calcChild(i, numParents)].px, pedigree[calcChild(i, numParents)].py, "Black", 4);
     }
+    console.log("NEW CANVAS HEIGHT SHOULD BE: " + calcCanvasHeight());
 }
 
 function refreshInputValues () {
