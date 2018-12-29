@@ -1,12 +1,17 @@
 //https://eloquentjavascript.net/1st_edition/chapter4.html
 var c = document.getElementById("pedigreeCanvas");
 var ctx = c.getContext("2d");
-var cNuc = document.getElementById("nuclearCanvas");
-var ctxNuc = cNuc.getContext("2d");
-
-var numGenerations = 4; //How many generations the pedigree chart should span (must be greater than zero)
+document.getElementById("numboxYear").value = randBetween(1200, 1500);
+var numGenerations = parseInt(document.getElementById("numboxGenerations").value, 10); //How many generations the pedigree chart should span (must be greater than zero)
 var numParents = 2; //Generally leave this at 2 unless you have a weird race that requires more or fewer than two parents to give birth a new individual (must be integer >= 1)
-var box = {height: 75, width: 150, border: "black", fill: "white", posX: 0, posY: 0};
+var box = {height: parseInt(document.getElementById("numboxBoxHeight").value, 10), 
+           width: parseInt(document.getElementById("numboxBoxWidth").value, 10), 
+           border: "black", 
+           fill: "white", 
+           posX: 0, 
+           posY: 0}; //initialize box object with default values
+//box.height = 75; document.getElementById("numboxBoxHeight").value;
+//box.width = document.getElementById("numboxBoxWidth").value;
 var charStartAge = 18; //age at which Person 0 will be when the pedigree is generated
 var childDeathRate = 0.3;
 var connector = 50; //The width of the space between boxes of different generations
@@ -17,6 +22,10 @@ var lnameProp = 0; //controls how last names are propagated. 0 is patriarchal, 1
 var maxAge = 100;
 var maxAgeDiff = 10; //maximum age difference (in years) for individuals within a relationship
 var maxChildrenPerFam = 8;
+var canMarginBottom = 10;
+var canMarginLeft = 10;
+var canMarginRight = 10;
+var CanMarginTop = 10;
 var marginBottom = 2;
 var marginLeft = 10;
 var marginRight = 10;
@@ -24,7 +33,7 @@ var marginTop = 5;
 var sexualMaturityAge = 16;
 var sexualMaturityEnd = 35;
 var vertSpacer = 25; //minimum vertical space between boxes of the same generation
-var year = 0; //origin year of the pedigree
+var year = document.getElementById("numboxYear").value; //origin year of the pedigree
 
 var pedigree = parentsArray(generatePedigree()); //contains an array of person objects
 
@@ -114,7 +123,11 @@ function drawHeader () {
     ctx.font = "30px Arial";
     ctx.fillStyle = "Black";
     ctx.textAlign = "end";
-    ctx.fillText("Pedigree Chart  #___ of ___", c.width, 50);
+    if (document.getElementById("chkGenerateBlank").checked) {
+        ctx.fillText("The Lineage of ____________________ (Completed " + year + ")", c.width, 50);
+    } else {
+        ctx.fillText("The Lineage of " + pedigree[0].fname + " " + pedigree[0].lname + " (Completed " + year + ")", c.width, 50);   
+    }
 }
 
 function drawProperty (message, x, y) {
@@ -412,7 +425,69 @@ function BFRDescent(tree, depth){
     return generation;
 }
 
-function shuffleArray(array) {
+function redraw () {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    refreshInputValues();
+    drawPedigree();
+    drawHeader();
+    for (var i = 0; i <= pedigree.length - 1; i++) {
+        checkDeath(pedigree[i]);
+        if (pedigree[i].isAlive == false) {
+            drawProperty(pedigree[i].fname + " " + pedigree[i].lname + " (D)", pedigree[i].cx + 10, pedigree[i].cy + 10);  
+        } else {
+            drawProperty(pedigree[i].fname + " " + pedigree[i].lname, pedigree[i].cx + 10, pedigree[i].cy + 10);   
+        }
+}
+
+    for(var i = 1; i <= pedigree.length - 1; i++) {
+        drawConnectors(pedigree[i].cx, pedigree[i].cy, pedigree[calcChild(i, numParents)].px, pedigree[calcChild(i, numParents)].py, "Black", 4);
+    }
+}
+
+function writePedQuickView () {
+    for (var i = 0; i <= pedigree.length - 1; i++) {
+        checkDeath(pedigree[i]);
+        if (pedigree[i].isAlive == false) {
+            drawProperty(pedigree[i].fname + " " + pedigree[i].lname + " (D)", pedigree[i].cx + 10, pedigree[i].cy + 10);  
+        } else {
+            drawProperty(pedigree[i].fname + " " + pedigree[i].lname, pedigree[i].cx + 10, pedigree[i].cy + 10);
+        }
+    }
+}
+
+function drawNewChart () {
+    if (document.getElementById("chkGenerateBlank").checked) {
+        drawBlankForm();
+    } else {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        numGenerations = parseInt(document.getElementById("numboxGenerations").value, 10);
+        refreshInputValues();
+        pedigree = parentsArray(generatePedigree());
+        drawPedigree();
+        drawHeader();
+        writePedQuickView();
+    }
+    
+    for(var i = 1; i <= pedigree.length - 1; i++) {
+        drawConnectors(pedigree[i].cx, pedigree[i].cy, pedigree[calcChild(i, numParents)].px, pedigree[calcChild(i, numParents)].py, "Black", 4);
+    }
+}
+
+function refreshInputValues () {
+    year = document.getElementById("numboxYear").value;
+    box.height = parseInt(document.getElementById("numboxBoxHeight").value, 10);
+    box.width = parseInt(document.getElementById("numboxBoxWidth").value, 10);
+    c.width = (numGenerations * box.width) + (connector * (numGenerations - 1));
+    
+    //re-evaluate this once header checkbox support is implemented
+    if (header.isEnabled === true) {
+        c.height = (Math.pow(numParents, (numGenerations - 1)) * box.height) + ((Math.pow(numParents, (numGenerations - 1)) - 1) * vertSpacer) + header.height;
+    } else {
+        c.height = (Math.pow(numParents, (numGenerations - 1)) * box.height) + ((Math.pow(numParents, (numGenerations - 1)) - 1) * vertSpacer);
+    }
+}
+
+function shuffleArray (array) {
 // Randomize array element order in-place.
 // Using Durstenfeld shuffle algorithm.
 
@@ -423,6 +498,25 @@ function shuffleArray(array) {
         array[j] = temp;
     }
     return array;
+}
+
+function calcYear (finishingYear, offset) {
+    calculatedYear = finishingYear - offset;
+    if (calculatedYear < 0) {return calculatedYear + " BCE";}
+    else {return calculatedYear;} 
+}
+
+function drawBlankForm () {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    numGenerations = parseInt(document.getElementById("numboxGenerations").value, 10);
+    refreshInputValues();
+    pedigree = parentsArray(generatePedigree());
+    drawPedigree();
+    drawHeader();
+    
+    for(var i = 1; i <= pedigree.length - 1; i++) {
+        drawConnectors(pedigree[i].cx, pedigree[i].cy, pedigree[calcChild(i, numParents)].px, pedigree[calcChild(i, numParents)].py, "Black", 4);
+    }
 }
 
 function set_parent_lname (child) {
