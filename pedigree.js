@@ -22,6 +22,7 @@ var marginLeft = 10;
 var marginRight = 10;
 var marginTop = 5;
 var sexualMaturityAge = 16;
+var sexualMaturityEnd = 35;
 var vertSpacer = 25; //minimum vertical space between boxes of the same generation
 var year = 0; //origin year of the pedigree
 
@@ -273,7 +274,7 @@ function createPerson (child) {
             break;
         default:
             //var person = new Object();
-            var parent_age_at_birth=randBetween(15,35);
+            var parent_age_at_birth=randBetween(sexualMaturityAge, sexualMaturityEnd);
             //person.fname = randomFirstName();
             //person.lname = randomLastName();
             person.age = child.age + parent_age_at_birth;
@@ -351,7 +352,7 @@ function generateParents(child, generationsLeft){
                     else {parent.lname = randomLastName();}
                     break;
                 default:
-                    setOther(person);
+                    setOther(parent);
                     if (lnameProp >= 2) {parent.lname = set_parent_lname(child);}
                     else {parent.lname = randomLastName();}
                     break;
