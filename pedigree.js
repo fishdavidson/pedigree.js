@@ -12,6 +12,7 @@ var box = {height: parseInt(document.getElementById("numboxBoxHeight").value, 10
            posY: 0}; //initialize box object with default values
 var pedChart = {height: 100,
                width: 100};
+var unknownChance = parseInt(document.getElementById("numboxUnknown").value, 10);
 //box.height = 75; document.getElementById("numboxBoxHeight").value;
 //box.width = document.getElementById("numboxBoxWidth").value;
 var charStartAge = 18; //age at which Person 0 will be when the pedigree is generated
@@ -228,13 +229,13 @@ function drawFooter () {
 }
 
 function drawHeader () {
-    ctx.font = "30px Arial";
+    ctx.font = "24px Arial";
     ctx.fillStyle = "Black";
-    ctx.textAlign = "end";
+    ctx.textAlign = "center";
     if (document.getElementById("chkGenerateBlank").checked) {
-        ctx.fillText("The Lineage of ____________ (Completed " + year + ")", c.width, 50);
+        ctx.fillText("The Lineage of ____________ (Completed " + year + ")", c.width / 2, 50);
     } else {
-        ctx.fillText("The Lineage of " + pedigree[0].fname + " " + pedigree[0].lname + " (Completed " + year + ")", c.width, 50);   
+        ctx.fillText("The Lineage of " + pedigree[0].fname + " " + pedigree[0].lname + " (Completed " + year + ")", c.width / 2, 50);
     }
 }
 
@@ -391,6 +392,17 @@ function setOther (person) {
     //return person;
 }
 
+function rollUnknownParents (person) {
+    var probability = randBetween(5, 101); //so upper bound is 100
+    if (probability <= unknownChance) {
+        applyUnknownParents(person);
+    }
+}
+
+function applyUnknownParents (person) {
+    person.isUnknown = true;
+}
+
 function randGender (person) {
     var i = randBetween(1, numParents);
     switch (i) {
@@ -432,6 +444,11 @@ function generateParents(child, generationsLeft){
                     if (lnameProp >= 2) {parent.lname = set_parent_lname(child);}
                     else {parent.lname = randomLastName();}
                     break;
+            }
+            if (child.isUnknown === true) {applyUnknownParents(parent);}
+            else {
+                parent.isUnknown = false;
+                rollUnknownParents(parent);
             }
             child.parents.push(parent); //push the parent to the end of the .parents array
             generateParents(parent, generationsLeft - 1); //recurse through the pedigree and populate it
@@ -524,19 +541,23 @@ function writePedQuickView (person) {
     
     person.born = calcYear(year, person.age); //calculates person's birth year
     
-    checkDeath(person);
-    if (person.isAlive == false) {
-        drawProperty(person.fname + " " + person.lname + " (D)", linePosX, linePosY, propertyFontSize);
-        linePosY += lineSpacing;
-        drawProperty(person.born + " - " + (person.born + person.lifespan), linePosX, linePosY, propertyFontSize);
-        linePosY += lineSpacing;
-        drawProperty(person.lifespan + " years old", linePosX, linePosY, propertyFontSize);
+    if (person.isUnknown == true) {
+        drawProperty("UNKNOWN", linePosX, linePosY, propertyFontSize);
     } else {
-        drawProperty(person.fname + " " + person.lname, linePosX, linePosY, propertyFontSize);
-        linePosY += lineSpacing;
-        drawProperty(person.born + " - ", linePosX, linePosY, propertyFontSize);
-        linePosY += lineSpacing;
-        drawProperty(person.age + " years old", linePosX, linePosY, propertyFontSize);
+        checkDeath(person);
+        if (person.isAlive == false) {
+            drawProperty(person.fname + " " + person.lname + " (D)", linePosX, linePosY, propertyFontSize);
+            linePosY += lineSpacing;
+            drawProperty(person.born + " - " + (person.born + person.lifespan), linePosX, linePosY, propertyFontSize);
+            linePosY += lineSpacing;
+            drawProperty(person.lifespan + " years old", linePosX, linePosY, propertyFontSize);
+        } else {
+            drawProperty(person.fname + " " + person.lname, linePosX, linePosY, propertyFontSize);
+            linePosY += lineSpacing;
+            drawProperty(person.born + " - ", linePosX, linePosY, propertyFontSize);
+            linePosY += lineSpacing;
+            drawProperty(person.age + " years old", linePosX, linePosY, propertyFontSize);
+        }
     }
 
 }
@@ -548,6 +569,7 @@ function drawNewChart () {
     } else {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         numGenerations = parseInt(document.getElementById("numboxGenerations").value, 10);
+        unknownChance = parseInt(document.getElementById("numboxUnknown").value, 10);
         refreshInputValues();
         c.height = calcCanvasHeight();
         pedigree = parentsArray(generatePedigree());

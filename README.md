@@ -18,7 +18,7 @@ Download all the files to your computer and extract/unzip them as necessary. Git
 
 Once you have all the files on your local computer, open up the "index.html" file in your web browser. It should draw a fancy pedigree chart for you automatically, but if you have a script blocker active, it may not work unless you turn the blocker off. I've only tested this in Chrome, but it should work for all modern major browsers.
 
-Also, since the control panel at the top of the page is still just for decoration, you'll need to hit the F5 key/refresh page button to draw another pedigree chart.
+When you generate a pedigree that you like, you can right click or long-press or whatever on the pedigree image and save it to your device.
 
 ## features
 
@@ -33,7 +33,7 @@ _The items in this list are subject to change, but what is listed below is what 
  - [x] Cisgendered heteronormative parents
  - [x] Dynamically-assigned connectors
  - [x] Header information (with chart index)
- - [ ] Missing parents (uncertain lineages)
+ - [x] Missing parents (uncertain lineages)
  - [ ] Siblings
  - [x] Death events (natural, accidental, illness, crime, etc)
  - [x] Random name generation from pool
@@ -53,3 +53,5 @@ _The items in this list are subject to change, but what is listed below is what 
  - [ ] Suffixes (Sr, Jr, III, IV, etc)
  - [ ] Toggles to switch between common, regional, or extended name banks
  - [ ] Modification tutorials
+ - [ ] Mini-mode (no text, just a symbolic representation of the pedigree in miniature form)
+ - [ ] Better print support via CSS
