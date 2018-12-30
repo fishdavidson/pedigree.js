@@ -12,7 +12,7 @@
 <form>
     <fieldset>
         <legend>Pedigree Control Panel</legend>
-        <p>These controls don't necessarily work as expected. Consider yourself warned!</p>
+        <p>Please use these controls to customize your fictional family tree.</p>
         
         <p><input id="numboxGenerations" type="number" min="1" max="16" value="4" required>
         <label for="numboxGenerations">Total Generations to Include*</label><br />
@@ -27,16 +27,16 @@
         <label for="numboxYear">Year Pedigree Ends</label></p>
         
         <p><input id="chkShowHeader" type="checkbox" name="chkShowHeader" checked>
-        <label for="showHeader">Show Pedigree Header Bar</label><br />
+        <label for="showHeader">Show Pedigree Title Bar</label><br />
         
-        <input id="chkShowSiblings" type="checkbox" name="chkShowSiblings">
+        <input id="chkShowSiblings" type="checkbox" name="chkShowSiblings" checked>
         <label for="showSiblings">Show Sibling Diagram</label><br />
         
         <input id="chkGenerateBlank" type="checkbox" name="chkGenerateBlank">
         <label for="generateBlank">Generate Blank Pedigree Chart</label><br /></p>
         
         <p><input id="btnRedraw" type="button" name="btnRedraw" value="Redraw" onclick="redraw();">
-        <input id="btnPrint" type="button" name="btnPrint" value="Print">
+        <input id="btnPrint" type="button" name="btnPrint" value="Print" onclick="window.print();">
         <input id="btnDrawNew" type="button" name="btnDrawNew" value="Draw New Pedigree" onclick="drawNewChart();"></p>
         
         <p><input id="showAdv" type="checkbox" name="showAdvancedControls">

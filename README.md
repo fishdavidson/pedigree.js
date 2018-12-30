@@ -35,10 +35,10 @@ _The items in this list are subject to change, but what is listed below is what 
  - [x] Header information (with chart index)
  - [ ] Missing parents (uncertain lineages)
  - [ ] Siblings
- - [ ] Death events (natural, accidental, illness, crime, etc)
+ - [x] Death events (natural, accidental, illness, crime, etc)
  - [x] Random name generation from pool
- - [ ] Printer friendly output
- - [ ] Blank chart support
+ - [x] Printer friendly output
+ - [x] Blank chart support
 
 ### features for future releases
 

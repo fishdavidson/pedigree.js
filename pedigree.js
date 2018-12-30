@@ -31,7 +31,7 @@ if (document.getElementById("chkShowHeader").checked) {
 } else {
     var header = {height: 0,
         width: 0,
-        isEnabled: false}
+        isEnabled: false};
 }
 
 var immigrationRate = 0.2;
@@ -86,9 +86,15 @@ function calcCanvasSize () {
 function calcCanvasHeight () {
     var maxHeight = 0;
     if (document.getElementById("chkShowHeader").checked) {
+        header.height = 100;
+        //header.isEnabled = true;
         header.startY = maxHeight;
         maxHeight += header.height;
         header.stopY = maxHeight;
+    } else {
+        header.height = 0;
+        header.startY = 0;
+        header.stopY = 0;
     }
     maxHeight += canMarginTop;
     pedChart.startY = maxHeight;
@@ -304,118 +310,6 @@ function drawPedigree () {
     ctx.stroke();
 }
 
-/* // backup function just in case I mess up
-function drawPedigree () {
-    var bottomPoint = 0; //bottom boundary for column
-    var curPerson = 0;
-    var curX = 0;
-    var curY = 0;
-    //console.log(curY);
-    var distCenter = 0; //distance between vertical centers
-    var topPoint = 0; //top boundary for column
-
-    ctx.beginPath();
-    ctx.strokeStyle = box.border;
-    ctx.fillStyle = box.fill;
-
-    if (header.isEnabled === false) {
-
-        for (var i = 1; i <= numGenerations; i++) {
-            if (i == numGenerations) {
-                curY = 0;
-                for (var j = 0; j < Math.pow(numParents, i - 1); j++) {
-                    ctx.rect(curX, curY, box.width, box.height);
-                    pedigree[curPerson].cx = curX;
-                    pedigree[curPerson].cy = curY + (box.height / 2);
-                    pedigree[curPerson].px = curX + box.width;
-                    pedigree[curPerson].py = curY + (box.height / 2);
-                    //console.log("cx " + pedigree[curPerson].cx + " cy " + pedigree[curPerson].cy + " px " + pedigree[curPerson].px + " py " + pedigree[curPerson].py);
-                    curY += (box.height + vertSpacer);
-                    curPerson++;
-                }
-            } else {
-                topPoint = Math.floor(calcBoundaryPoint(Math.pow(numParents, i - 1), c.height));
-                //console.log("topPoint is " + topPoint + "px");
-                bottomPoint = Math.floor(c.height - topPoint);
-                //console.log("bottomPoint is " + bottomPoint + "px");
-                curY = Math.floor(calcBoundaryPoint(Math.pow(numParents, i - 1), c.height) + ((box.height / 2) * (-1)));
-                //console.log("Outer curY is " + curY + "px");
-                distCenter = calcSpacing (bottomPoint, topPoint, Math.pow(numParents, i - 1));
-                //console.log("DistCenter is " + distCenter);
-                //distCenter = Math.floor((c.height - (calcBoundaryPoint(Math.pow(numParents, i - 1), c.height) * 2)) / Math.pow(numParents, i - 1));
-                for (var j = 0; j < Math.pow(numParents, i - 1); j++) {
-                    ctx.rect(curX, curY, box.width, box.height);
-                    //console.log("Inner curY is " + curY + "px");
-
-                    // test code
-                    pedigree[curPerson].cx = curX;
-                    pedigree[curPerson].cy = curY + (box.height / 2);
-                    pedigree[curPerson].px = curX + box.width;
-                    pedigree[curPerson].py = curY + (box.height / 2);
-                    //console.log("cx " + pedigree[curPerson].cx + " cy " + pedigree[curPerson].cy + " px " + pedigree[curPerson].px + " py " + pedigree[curPerson].py);
-                    //end test code
-
-                    curY += distCenter;
-                    curPerson++;
-                }
-                curX += (box.width + connector);
-            }
-
-            //curY = (box.height / 2) * (-1);
-            //console.log(curY);
-
-        }
-    } else {
-        for (var i = 1; i <= numGenerations; i++) {
-            if (i == numGenerations) {
-                curY = header.height;
-                for (var j = 0; j < Math.pow(numParents, i - 1); j++) {
-                    ctx.rect(curX, curY, box.width, box.height);
-                    pedigree[curPerson].cx = curX;
-                    pedigree[curPerson].cy = curY + (box.height / 2);
-                    pedigree[curPerson].px = curX + box.width;
-                    pedigree[curPerson].py = curY + (box.height / 2);
-                    //console.log("cx " + pedigree[curPerson].cx + " cy " + pedigree[curPerson].cy + " px " + pedigree[curPerson].px + " py " + pedigree[curPerson].py);
-                    curY += (box.height + vertSpacer);
-                    curPerson++;
-                }
-            } else {
-                topPoint = Math.floor(calcBoundaryPoint(Math.pow(numParents, i - 1), c.height - header.height));
-                //console.log("topPoint is " + topPoint + "px");
-                bottomPoint = Math.floor(c.height - topPoint - header.height);
-                //console.log("bottomPoint is " + bottomPoint + "px");
-                curY = Math.floor(calcBoundaryPoint(Math.pow(numParents, i - 1), c.height - header.height) + ((box.height / 2) * (-1))) + header.height;
-                //console.log("Outer curY is " + curY + "px");
-                distCenter = calcSpacing (bottomPoint, topPoint, Math.pow(numParents, i - 1));
-                //console.log("DistCenter is " + distCenter);
-                //distCenter = Math.floor((c.height - (calcBoundaryPoint(Math.pow(numParents, i - 1), c.height) * 2)) / Math.pow(numParents, i - 1));
-                for (var j = 0; j < Math.pow(numParents, i - 1); j++) {
-                    ctx.rect(curX, curY, box.width, box.height);
-                    //console.log("Inner curY is " + curY + "px");
-
-                    // test code
-                    pedigree[curPerson].cx = curX;
-                    pedigree[curPerson].cy = curY + (box.height / 2);
-                    pedigree[curPerson].px = curX + box.width;
-                    pedigree[curPerson].py = curY + (box.height / 2);
-                    //console.log("cx " + pedigree[curPerson].cx + " cy " + pedigree[curPerson].cy + " px " + pedigree[curPerson].px + " py " + pedigree[curPerson].py);
-                    //end test code
-
-                    curY += distCenter;
-                    curPerson++;
-                }
-                curX += (box.width + connector);
-            }
-
-            //curY = (box.height / 2) * (-1);
-            //console.log(curY);
-        }
-    }
-
-    ctx.stroke();
-}
-*/
-
 function randBetween(a,b){
     // the +1 is to make the range upper inclusive
     return a + Math.floor(Math.random() * (b - a + 1));
@@ -598,20 +492,29 @@ function redraw () {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     refreshInputValues();
     c.height = calcCanvasHeight();
-    drawPedigree();
-    drawHeader();
-    for (var i = 0; i <= pedigree.length - 1; i++) {
-        checkDeath(pedigree[i]);
-        if (pedigree[i].isAlive == false) {
-            drawProperty(pedigree[i].fname + " " + pedigree[i].lname + " (D)", pedigree[i].cx + 10, pedigree[i].cy + 10, propertyFontSize);  
-        } else {
-            drawProperty(pedigree[i].fname + " " + pedigree[i].lname, pedigree[i].cx + 10, pedigree[i].cy + 10, propertyFontSize);   
+    if (document.getElementById("chkGenerateBlank").checked) {
+        drawBlankForm();
+        if (document.getElementById("chkShowHeader").checked) {drawHeader();}
+    } else {
+        drawPedigree();
+        if (document.getElementById("chkShowHeader").checked) {drawHeader();}
+        for (var i = 0; i < pedigree.length; i++) {
+            writePedQuickView(pedigree[i]);   
         }
-}
+        /*for (var i = 0; i <= pedigree.length - 1; i++) {
+            checkDeath(pedigree[i]);
+            if (pedigree[i].isAlive == false) {
+                drawProperty(pedigree[i].fname + " " + pedigree[i].lname + " (D)", pedigree[i].cx + 10, pedigree[i].cy + 10, propertyFontSize);  
+            } else {
+                drawProperty(pedigree[i].fname + " " + pedigree[i].lname, pedigree[i].cx + 10, pedigree[i].cy + 10, propertyFontSize);   
+            }
+        }*/
 
-    for(var i = 1; i <= pedigree.length - 1; i++) {
-        drawConnectors(pedigree[i].cx, pedigree[i].cy, pedigree[calcChild(i, numParents)].px, pedigree[calcChild(i, numParents)].py, "Black", 4);
+        for(var i = 1; i <= pedigree.length - 1; i++) {
+            drawConnectors(pedigree[i].cx, pedigree[i].cy, pedigree[calcChild(i, numParents)].px, pedigree[calcChild(i, numParents)].py, "Black", 4);
+        } 
     }
+    drawFooter();
 }
 
 function writePedQuickView (person) {
@@ -641,6 +544,7 @@ function writePedQuickView (person) {
 function drawNewChart () {
     if (document.getElementById("chkGenerateBlank").checked) {
         drawBlankForm();
+        if (document.getElementById("chkShowHeader").checked) {drawHeader();}
     } else {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         numGenerations = parseInt(document.getElementById("numboxGenerations").value, 10);
@@ -648,12 +552,12 @@ function drawNewChart () {
         c.height = calcCanvasHeight();
         pedigree = parentsArray(generatePedigree());
         drawPedigree();
-        drawHeader();
+        if (document.getElementById("chkShowHeader").checked) {drawHeader();}
         for (var i = 0; i < pedigree.length; i++) {
             writePedQuickView(pedigree[i]);   
         }
     }
-    
+    drawFooter();
     for(var i = 1; i <= pedigree.length - 1; i++) {
         drawConnectors(pedigree[i].cx, pedigree[i].cy, pedigree[calcChild(i, numParents)].px, pedigree[calcChild(i, numParents)].py, "Black", 4);
     }
@@ -665,13 +569,13 @@ function refreshInputValues () {
     box.height = parseInt(document.getElementById("numboxBoxHeight").value, 10);
     box.width = parseInt(document.getElementById("numboxBoxWidth").value, 10);
     c.width = (numGenerations * box.width) + (connector * (numGenerations - 1));
-    
+       
     //re-evaluate this once header checkbox support is implemented
-    if (header.isEnabled === true) {
+    /*if (header.isEnabled === true) {
         c.height = (Math.pow(numParents, (numGenerations - 1)) * box.height) + ((Math.pow(numParents, (numGenerations - 1)) - 1) * vertSpacer) + header.height;
     } else {
         c.height = (Math.pow(numParents, (numGenerations - 1)) * box.height) + ((Math.pow(numParents, (numGenerations - 1)) - 1) * vertSpacer);
-    }
+    }*/
 }
 
 function shuffleArray (array) {
@@ -697,9 +601,9 @@ function drawBlankForm () {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     numGenerations = parseInt(document.getElementById("numboxGenerations").value, 10);
     refreshInputValues();
+    c.height = calcCanvasHeight();
     pedigree = parentsArray(generatePedigree());
     drawPedigree();
-    drawHeader();
     
     for(var i = 1; i <= pedigree.length - 1; i++) {
         drawConnectors(pedigree[i].cx, pedigree[i].cy, pedigree[calcChild(i, numParents)].px, pedigree[calcChild(i, numParents)].py, "Black", 4);
@@ -758,13 +662,8 @@ if (document.getElementById("chkShowHeader").checked) {drawHeader();}
 drawFooter();
 //drawProperty(pedigree[4].fname, 50, 50);
 
-for (var i = 0; i <= pedigree.length - 1; i++) {
-    checkDeath(pedigree[i]);
-    if (pedigree[i].isAlive == false) {
-        drawProperty(pedigree[i].fname + " " + pedigree[i].lname + " (D)", pedigree[i].cx + 10, pedigree[i].cy + 10, propertyFontSize);  
-    } else {
-        drawProperty(pedigree[i].fname + " " + pedigree[i].lname, pedigree[i].cx + 10, pedigree[i].cy + 10, propertyFontSize);   
-    }
+for (var i = 0; i < pedigree.length; i++) {
+    writePedQuickView(pedigree[i]);   
 }
 
 for(var i = 1; i <= pedigree.length - 1; i++) {
