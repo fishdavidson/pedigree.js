@@ -19,11 +19,6 @@ var charStartAge = 18; //age at which Person 0 will be when the pedigree is gene
 var childDeathRate = 0.3;
 var connector = 50; //The width of the space between boxes of different generations
 var containerFooter = {height: 50, width: 100};
-var containerSiblings = {height: 100, width: 100, spaceBetween: 50, connectorHeight: 25};
-if (document.getElementById("chkShowSiblings").checked) {
-    generateSiblings();
-    calcSiblingSize();
-}
 var desiredYear = 0; //The year that the pedigree chart will "end" on
 if (document.getElementById("chkShowHeader").checked) {
     var header = {height: 100,
@@ -55,6 +50,15 @@ var vertSpacer = 25; //minimum vertical space between boxes of the same generati
 var year = document.getElementById("numboxYear").value; //origin year of the pedigree
 
 var pedigree = parentsArray(generatePedigree()); //contains an array of person objects
+var containerSiblings = {height: 100,
+                         width: 100,
+                         spaceBetween: 50,
+                         connectorHeight: 25};
+if (document.getElementById("chkShowSiblings").checked) {
+    var siblingArray = generateSiblings(pedigree[0]);
+    shuffleArray(siblingArray);
+    calcSiblingSize(siblingArray);
+}
 
 //set canvas dimensions based on the number of generations and box size
 c.width = (numGenerations * box.width) + (connector * (numGenerations - 1));
@@ -120,43 +124,58 @@ function calcCanvasWidth () {
     return maxWidth;
 }
 
-function calcSiblingSize () {
-    
+function calcSiblingSize (siblingArray) {
+    containerSiblings.height = calcSiblingHeight(siblingArray);
+    containerSiblings.width = calcSiblingWidth(siblingArray);
 }
 
-function createSibling () {
-    // THIS FUNCTION DOESN'T WORK YET
+function calcSiblingHeight (siblingArray) {
+    return box.height + containerSiblings.connectorHeight;
+}
+function calcSiblingWidth (siblingArray) {
+    return (siblingArray.length * box.width) + ((siblingArray.length - 1) * containerSiblings.spaceBetween);
+}
+
+function createSibling (mainSibling) {
     var person = new Object();
     person.isAlive = true;
+    var x = randBetween(0, numParents - 1);
     
-	switch (child) {
-        case 0: //sets initial properties for Person 0
+	switch (x) {
+        case 0: //male
             //var person = randGender();
-            //person.fname = generateName();
-            randGender(person);
-            person.lname = randomLastName();
-            person.age = charStartAge;
-            person.lifespan = randBetween(charStartAge + 1, maxAge); //ensure Person 0 is never dead
+            setMale(person);
+            break;
+        case 1:
+            setFemale(person);
             break;
         default:
-            //var person = new Object();
-            var parent_age_at_birth=randBetween(sexualMaturityAge, sexualMaturityEnd);
-            //person.fname = randomFirstName();
-            //person.lname = randomLastName();
-            person.age = child.age + parent_age_at_birth;
-            //person.lifespan = randBetween(sexualMaturityAge, maxAge);
-            //console.log("Lifespan is " + person.lifespan);
+            setOther(person);
             break;
     }
-	return person;	
+    person.lname = mainSibling.lname;
+    person.isAlive = checkChildDeath(person);
+    console.log(person);
+	return person;
+}
+
+function checkChildDeath (person) {
+    if (randBetween(0, 101) < childDeathRate * 100) {
+        person.isAlive = false;
+    } else {
+        person.isAlive = true;
+    }
+    return person.isAlive;
 }
 
 function generateSiblings (person) {
     var siblingArray = [person];
     var numSiblings = randBetween(0, maxChildrenPerFam - 1);
     for (var i = 1; i < numSiblings; i++) {
-        siblingArray.push
+        siblingArray.push(createSibling(person));
     }
+    console.log(siblingArray);
+    return siblingArray;
 }
 
 function calcChild (counter, numParents) {
@@ -244,6 +263,67 @@ function drawProperty (message, x, y, fontSize) {
     ctx.fillStyle = "Red";
     ctx.textAlign = "start";
     ctx.fillText(message, x, y);
+}
+
+function drawSiblings (siblingArray) {
+    ctx.beginPath();
+    ctx.strokeStyle = box.border;
+    ctx.fillStyle = box.fill;
+    
+    var curX = 0;
+    var curY = containerSiblings.startY + containerSiblings.connectorHeight;
+    
+    for (i = 0; i < siblingArray.length; i++) {
+        ctx.rect(curX, curY, box.width, box.height);
+        siblingArray[i].cx = parseInt(curX, 10);
+        siblingArray[i].cy = parseInt(curY + (box.height / 2), 10);
+        siblingArray[i].tx = parseInt(curX + (box.width / 2), 10);
+        siblingArray[i].ty = parseInt(curY, 10);
+        writeSiblings(siblingArray[i]);
+        curX += (box.width + containerSiblings.spaceBetween);
+    }
+    
+    ctx.stroke();
+    
+}
+
+function writeSiblings (sibling) {
+    var lineSpacing = propertyFontSize * 1.4;
+    var linePosY = sibling.cy - (box.height / 2) + propertyFontSize + marginTop; //gets line position to top
+    var linePosX = sibling.cx + marginLeft; //indents the text just a little
+    
+    if (sibling.isAlive == true) {
+        drawProperty(sibling.fname + " " + sibling.lname, linePosX, linePosY, propertyFontSize);
+        linePosY += lineSpacing;
+    } else {
+        drawProperty(sibling.fname + " " + sibling.lname + " (D)", linePosX, linePosY, propertyFontSize);
+        linePosY += lineSpacing;
+        //drawProperty(sibling.fname + " " + sibling.lname + " (D)", linePosX, linePosY, propertyFontSize);
+        //linePosY += lineSpacing;
+    }
+    
+}
+
+function drawSiblingConnector (siblingArray, color, width) {
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineCap = "square";
+    ctx.lineWidth = width;
+    
+    if (siblingArray.length === 1) {
+        drawProperty(siblingArray[0].fname + " is an only child.", siblingArray[0].cx + box.width + containerSiblings.spaceBetween, siblingArray[0].cy, propertyFontSize);
+    } else {
+        //(parentX, parentY, childX, childY, color, width)
+        for (var i = 0; i < siblingArray.length; i++) {
+            ctx.moveTo(siblingArray[i].tx, siblingArray[i].ty);
+            console.log("TX AND TY " + siblingArray[i].tx + " " + siblingArray[i].ty)
+            ctx.lineTo(siblingArray[i].tx, siblingArray[i].ty - containerSiblings.connectorHeight);   
+        }
+        ctx.moveTo(siblingArray[0].tx, siblingArray[0].ty - containerSiblings.connectorHeight);
+        ctx.lineTo(siblingArray[siblingArray.length - 1].tx, siblingArray[siblingArray.length - 1].ty - containerSiblings.connectorHeight);
+
+    }
+    ctx.stroke();
 }
 
 function drawPedigree () {
@@ -393,7 +473,7 @@ function setOther (person) {
 }
 
 function rollUnknownParents (person) {
-    var probability = randBetween(5, 101); //so upper bound is 100
+    var probability = randBetween(5, 100);
     if (probability <= unknownChance) {
         applyUnknownParents(person);
     }
@@ -692,6 +772,11 @@ for(var i = 1; i <= pedigree.length - 1; i++) {
     drawConnectors(pedigree[i].cx, pedigree[i].cy, pedigree[calcChild(i, numParents)].px, pedigree[calcChild(i, numParents)].py, "Black", 4);
     //console.log("Child of " + i + " is " + calcChild(i, 2));
 }
+
+drawSiblings(siblingArray);
+drawSiblingConnector(siblingArray, "Black", 4);
+//generateSiblings(pedigree[0]);
+//createSibling(pedigree[0]);
 
 /*for (var i = 0; i <= 100; i++) {
     console.log("Testing Randbetween(15,100)" + randBetween(15, 100));
