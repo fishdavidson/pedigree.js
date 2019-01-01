@@ -61,7 +61,7 @@ if (document.getElementById("chkShowSiblings").checked) {
 }
 
 //set canvas dimensions based on the number of generations and box size
-c.width = (numGenerations * box.width) + (connector * (numGenerations - 1));
+c.width = calcCanvasWidth(); //(numGenerations * box.width) + (connector * (numGenerations - 1)) + 800;
 header.width = c.width;
 
 c.height = calcCanvasHeight(); //replace with calcCanvasSize when done
@@ -121,7 +121,14 @@ function calcCanvasHeight () {
 
 function calcCanvasWidth () {
     var maxWidth = 0
+    if (header.width > maxWidth) {maxWidth = header.width;}
+    if (calcPedigreeWidth() > maxWidth) {maxWidth = calcPedigreeWidth();}
+    if (calcSiblingWidth(siblingArray) > maxWidth) {maxWidth = calcSiblingWidth(siblingArray);}
     return maxWidth;
+}
+
+function calcPedigreeWidth () {
+    return (numGenerations * box.width) + (connector * (numGenerations - 1));
 }
 
 function calcSiblingSize (siblingArray) {
@@ -170,9 +177,11 @@ function checkChildDeath (person) {
 
 function generateSiblings (person) {
     var siblingArray = [person];
+    siblingArray[0].isMain = true;
     var numSiblings = randBetween(0, maxChildrenPerFam - 1);
     for (var i = 1; i < numSiblings; i++) {
         siblingArray.push(createSibling(person));
+        siblingArray[i].isMain = false;
     }
     console.log(siblingArray);
     return siblingArray;
@@ -301,7 +310,24 @@ function writeSiblings (sibling) {
         //drawProperty(sibling.fname + " " + sibling.lname + " (D)", linePosX, linePosY, propertyFontSize);
         //linePosY += lineSpacing;
     }
-    
+    if (sibling.isMain == false) {
+        switch (sibling.sex) {
+            case "male":
+                drawProperty("Brother", linePosX, linePosY, propertyFontSize);
+                linePosY += lineSpacing;
+                break;
+            case "female":
+                drawProperty("Sister", linePosX, linePosY, propertyFontSize);
+                linePosY += lineSpacing;
+                break;
+            case "other":
+                drawProperty("Intersex", linePosX, linePosY, propertyFontSize);
+                linePosY += lineSpacing;
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 function drawSiblingConnector (siblingArray, color, width) {
