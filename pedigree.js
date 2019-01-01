@@ -624,18 +624,14 @@ function redraw () {
         for (var i = 0; i < pedigree.length; i++) {
             writePedQuickView(pedigree[i]);   
         }
-        /*for (var i = 0; i <= pedigree.length - 1; i++) {
-            checkDeath(pedigree[i]);
-            if (pedigree[i].isAlive == false) {
-                drawProperty(pedigree[i].fname + " " + pedigree[i].lname + " (D)", pedigree[i].cx + 10, pedigree[i].cy + 10, propertyFontSize);  
-            } else {
-                drawProperty(pedigree[i].fname + " " + pedigree[i].lname, pedigree[i].cx + 10, pedigree[i].cy + 10, propertyFontSize);   
-            }
-        }*/
-
+        
         for(var i = 1; i <= pedigree.length - 1; i++) {
             drawConnectors(pedigree[i].cx, pedigree[i].cy, pedigree[calcChild(i, numParents)].px, pedigree[calcChild(i, numParents)].py, "Black", 4);
-        } 
+        }
+        if (document.getElementById("chkShowSiblings").checked) {
+            drawSiblings(siblingArray);
+            drawSiblingConnector(siblingArray, "Black", 4);
+        }
     }
     drawFooter();
 }
@@ -677,12 +673,24 @@ function drawNewChart () {
         numGenerations = parseInt(document.getElementById("numboxGenerations").value, 10);
         unknownChance = parseInt(document.getElementById("numboxUnknown").value, 10);
         refreshInputValues();
+        if (document.getElementById("chkShowSiblings").checked) {
+            siblingArray = generateSiblings(pedigree[0]);
+            shuffleArray(siblingArray);
+            calcSiblingSize(siblingArray);
+            console.log("Sibling Width is supposed to be " + calcSiblingWidth);
+        }
         c.height = calcCanvasHeight();
+        c.width = calcCanvasWidth();
+        console.log("Redrawn Canvas Width is " + c.width);
         pedigree = parentsArray(generatePedigree());
         drawPedigree();
         if (document.getElementById("chkShowHeader").checked) {drawHeader();}
         for (var i = 0; i < pedigree.length; i++) {
             writePedQuickView(pedigree[i]);   
+        }
+        if (document.getElementById("chkShowSiblings").checked) {
+            drawSiblings(siblingArray);
+            drawSiblingConnector(siblingArray, "Black", 4);
         }
     }
     drawFooter();
