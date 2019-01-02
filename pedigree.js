@@ -615,6 +615,7 @@ function redraw () {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     refreshInputValues();
     c.height = calcCanvasHeight();
+    c.width = calcCanvasWidth();
     if (document.getElementById("chkGenerateBlank").checked) {
         drawBlankForm();
         if (document.getElementById("chkShowHeader").checked) {drawHeader();}
@@ -673,16 +674,16 @@ function drawNewChart () {
         numGenerations = parseInt(document.getElementById("numboxGenerations").value, 10);
         unknownChance = parseInt(document.getElementById("numboxUnknown").value, 10);
         refreshInputValues();
+        console.log("Redrawn Canvas Width is " + c.width);
+        pedigree = parentsArray(generatePedigree());
         if (document.getElementById("chkShowSiblings").checked) {
             siblingArray = generateSiblings(pedigree[0]);
             shuffleArray(siblingArray);
             calcSiblingSize(siblingArray);
-            console.log("Sibling Width is supposed to be " + calcSiblingWidth);
+            console.log("Sibling Width is supposed to be " + calcSiblingWidth(siblingArray));
         }
         c.height = calcCanvasHeight();
         c.width = calcCanvasWidth();
-        console.log("Redrawn Canvas Width is " + c.width);
-        pedigree = parentsArray(generatePedigree());
         drawPedigree();
         if (document.getElementById("chkShowHeader").checked) {drawHeader();}
         for (var i = 0; i < pedigree.length; i++) {
