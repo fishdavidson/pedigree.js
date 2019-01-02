@@ -457,11 +457,15 @@ function createPerson (child) {
             break;
         default:
             //var person = new Object();
-            var parent_age_at_birth=randBetween(sexualMaturityAge, sexualMaturityEnd);
+            var parent_age_at_birth = randBetween(sexualMaturityAge, sexualMaturityEnd);
             //person.fname = randomFirstName();
             //person.lname = randomLastName();
             person.age = child.age + parent_age_at_birth;
-            //person.lifespan = randBetween(sexualMaturityAge, maxAge);
+            person.lifespan = randLifespan();
+            if (person.lifespan < parent_age_at_birth) {
+                console.log("SOMEONE WAS GONNA DIE");
+                person.lifespan = parent_age_at_birth + 1;
+            }
             //console.log("Lifespan is " + person.lifespan);
             break;
     }
@@ -473,7 +477,7 @@ function setMale (person) {
     person.fname = fnameM();
     person.lname = undefined;
     person.sex = "male";
-    person.lifespan = randBetween(sexualMaturityAge, maxAge);
+    //person.lifespan = randBetween(sexualMaturityAge, maxAge);
     person.born = 0;
     //return person;
 }
@@ -483,7 +487,7 @@ function setFemale (person) {
     person.fname = fnameF();
     person.lname = undefined;
     person.sex = "female";
-    person.lifespan = randBetween(sexualMaturityAge, maxAge);
+    //person.lifespan = randBetween(sexualMaturityAge, maxAge);
     person.born = 0;
     //return person;
 }
@@ -493,7 +497,7 @@ function setOther (person) {
     person.fname = randomFirstName();
     person.lname = undefined;
     person.sex = "other";
-    person.lifespan = randBetween(sexualMaturityAge, maxAge);
+    //person.lifespan = randBetween(sexualMaturityAge, maxAge);
     person.born = 0;
     //return person;
 }
@@ -579,6 +583,10 @@ function generatePedigree () {
     finalPerson=createPerson(0); //creates Person 0
     generateParents(finalPerson, numGenerations - 1); //assigns .parents property to person 0
     return finalPerson;
+}
+
+function randLifespan () {
+    return randBetween(sexualMaturityAge, maxAge);
 }
 
 //ezmac comments
