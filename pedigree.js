@@ -261,9 +261,9 @@ function drawHeader () {
     ctx.fillStyle = "Black";
     ctx.textAlign = "center";
     if (document.getElementById("chkGenerateBlank").checked) {
-        ctx.fillText("The Lineage of ____________ (Completed " + year + ")", c.width / 2, 50);
+        ctx.fillText("The Lineage of ____________ (Completed " + formatYear(year) + ")", c.width / 2, 50);
     } else {
-        ctx.fillText("The Lineage of " + pedigree[0].fname + " " + pedigree[0].lname + " (Completed " + year + ")", c.width / 2, 50);
+        ctx.fillText("The Lineage of " + pedigree[0].fname + " " + pedigree[0].lname + " (Completed " + formatYear(year) + ")", c.width / 2, 50);
     }
 }
 
@@ -659,13 +659,13 @@ function writePedQuickView (person) {
         if (person.isAlive == false) {
             drawProperty(person.fname + " " + person.lname + " (D)", linePosX, linePosY, propertyFontSize);
             linePosY += lineSpacing;
-            drawProperty(person.born + " - " + (person.born + person.lifespan), linePosX, linePosY, propertyFontSize);
+            drawProperty(formatYear(person.born) + " - " + formatYear(person.born + person.lifespan), linePosX, linePosY, propertyFontSize);
             linePosY += lineSpacing;
             drawProperty(person.lifespan + " years old", linePosX, linePosY, propertyFontSize);
         } else {
             drawProperty(person.fname + " " + person.lname, linePosX, linePosY, propertyFontSize);
             linePosY += lineSpacing;
-            drawProperty(person.born + " - ", linePosX, linePosY, propertyFontSize);
+            drawProperty(formatYear(person.born) + " - ", linePosX, linePosY, propertyFontSize);
             linePosY += lineSpacing;
             drawProperty(person.age + " years old", linePosX, linePosY, propertyFontSize);
         }
@@ -738,8 +738,17 @@ function shuffleArray (array) {
 
 function calcYear (finishingYear, offset) {
     calculatedYear = finishingYear - offset;
-    if (calculatedYear < 0) {return calculatedYear + " BCE";}
-    else {return calculatedYear;} 
+    //if (calculatedYear < 0) {return calculatedYear + " BCE";}
+    //else {return calculatedYear;}
+    return calculatedYear;
+}
+
+function formatYear (year) {
+    if (year < 0) {
+        return (year * (-1)) + " BCE";
+    } else {
+        return year;
+    }
 }
 
 function drawBlankForm () {
