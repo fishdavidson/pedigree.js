@@ -288,7 +288,7 @@ function drawSiblings (siblingArray) {
         siblingArray[i].cy = parseInt(curY + (box.height / 2), 10);
         siblingArray[i].tx = parseInt(curX + (box.width / 2), 10);
         siblingArray[i].ty = parseInt(curY, 10);
-        writeSiblings(siblingArray[i]);
+        //writeSiblings(siblingArray[i]);
         curX += (box.width + containerSiblings.spaceBetween);
     }
     
@@ -640,6 +640,9 @@ function redraw () {
         if (document.getElementById("chkShowSiblings").checked) {
             drawSiblings(siblingArray);
             drawSiblingConnector(siblingArray, "Black", 4);
+            for (var i = 0; i < siblingArray.length; i++) {
+                writeSiblings(siblingArray[i]);
+            }
         }
     }
     drawFooter();
@@ -675,6 +678,8 @@ function writePedQuickView (person) {
 
 function drawNewChart () {
     if (document.getElementById("chkGenerateBlank").checked) {
+        refreshInputValues();
+        pedigree = parentsArray(generatePedigree());
         drawBlankForm();
         if (document.getElementById("chkShowHeader").checked) {drawHeader();}
     } else {
@@ -700,6 +705,9 @@ function drawNewChart () {
         if (document.getElementById("chkShowSiblings").checked) {
             drawSiblings(siblingArray);
             drawSiblingConnector(siblingArray, "Black", 4);
+            for (var i = 0; i < siblingArray.length; i++) {
+                writeSiblings(siblingArray[i]);
+            }
         }
     }
     drawFooter();
@@ -756,11 +764,16 @@ function drawBlankForm () {
     numGenerations = parseInt(document.getElementById("numboxGenerations").value, 10);
     refreshInputValues();
     c.height = calcCanvasHeight();
-    pedigree = parentsArray(generatePedigree());
+    c.width = calcCanvasWidth();
+    //pedigree = parentsArray(generatePedigree());
     drawPedigree();
     
     for(var i = 1; i <= pedigree.length - 1; i++) {
         drawConnectors(pedigree[i].cx, pedigree[i].cy, pedigree[calcChild(i, numParents)].px, pedigree[calcChild(i, numParents)].py, "Black", 4);
+    }
+    if (document.getElementById("chkGenerateBlank").checked) {
+        drawSiblings(siblingArray);
+        drawSiblingConnector(siblingArray, "Black", 4);
     }
 }
 
@@ -827,6 +840,10 @@ for(var i = 1; i <= pedigree.length - 1; i++) {
 
 drawSiblings(siblingArray);
 drawSiblingConnector(siblingArray, "Black", 4);
+
+for (var i = 0; i < siblingArray.length; i++) {
+    writeSiblings(siblingArray[i]);
+}
 //generateSiblings(pedigree[0]);
 //createSibling(pedigree[0]);
 
