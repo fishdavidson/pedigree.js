@@ -1,3 +1,4 @@
+//https://stackoverflow.com/questions/34246247/create-hamburger-menu-in-javascript
 //https://eloquentjavascript.net/1st_edition/chapter4.html
 var c = document.getElementById("pedigreeCanvas");
 var ctx = c.getContext("2d");
@@ -570,7 +571,6 @@ function generateParents(child, generationsLeft){
 //Original FishDavidson function, commenting out to test ezmac version
 function generatePedigree () {
     var pedArr = new Array();
-
     for (var i = 1; i <= numGenerations; i++) {
         for (var j = 0; j < Math.pow(numParents, i - 1); j++) {
             pedArr.push(createPerson(i));
@@ -677,38 +677,37 @@ function writePedQuickView (person) {
 }
 
 function drawNewChart () {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    numGenerations = parseInt(document.getElementById("numboxGenerations").value, 10);
+    unknownChance = parseInt(document.getElementById("numboxUnknown").value, 10);
+    refreshInputValues();
+    console.log("Redrawn Canvas Width is " + c.width);
+    pedigree = parentsArray(generatePedigree());
+    if (document.getElementById("chkShowSiblings").checked) {
+        siblingArray = generateSiblings(pedigree[0]);
+        shuffleArray(siblingArray);
+        calcSiblingSize(siblingArray);
+        console.log("Sibling Width is supposed to be " + calcSiblingWidth(siblingArray));
+    }
+    c.height = calcCanvasHeight();
+    c.width = calcCanvasWidth();
+    drawPedigree();
+    if (document.getElementById("chkShowHeader").checked) {drawHeader();}
+    for (var i = 0; i < pedigree.length; i++) {
+        writePedQuickView(pedigree[i]);   
+    }
+    if (document.getElementById("chkShowSiblings").checked) {
+        drawSiblings(siblingArray);
+        drawSiblingConnector(siblingArray, "Black", 4);
+        for (var i = 0; i < siblingArray.length; i++) {
+            writeSiblings(siblingArray[i]);
+        }
+    }
     if (document.getElementById("chkGenerateBlank").checked) {
-        refreshInputValues();
-        pedigree = parentsArray(generatePedigree());
+        //refreshInputValues();
+        //pedigree = parentsArray(generatePedigree());
         drawBlankForm();
         if (document.getElementById("chkShowHeader").checked) {drawHeader();}
-    } else {
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        numGenerations = parseInt(document.getElementById("numboxGenerations").value, 10);
-        unknownChance = parseInt(document.getElementById("numboxUnknown").value, 10);
-        refreshInputValues();
-        console.log("Redrawn Canvas Width is " + c.width);
-        pedigree = parentsArray(generatePedigree());
-        if (document.getElementById("chkShowSiblings").checked) {
-            siblingArray = generateSiblings(pedigree[0]);
-            shuffleArray(siblingArray);
-            calcSiblingSize(siblingArray);
-            console.log("Sibling Width is supposed to be " + calcSiblingWidth(siblingArray));
-        }
-        c.height = calcCanvasHeight();
-        c.width = calcCanvasWidth();
-        drawPedigree();
-        if (document.getElementById("chkShowHeader").checked) {drawHeader();}
-        for (var i = 0; i < pedigree.length; i++) {
-            writePedQuickView(pedigree[i]);   
-        }
-        if (document.getElementById("chkShowSiblings").checked) {
-            drawSiblings(siblingArray);
-            drawSiblingConnector(siblingArray, "Black", 4);
-            for (var i = 0; i < siblingArray.length; i++) {
-                writeSiblings(siblingArray[i]);
-            }
-        }
     }
     drawFooter();
     for(var i = 1; i <= pedigree.length - 1; i++) {
@@ -844,21 +843,3 @@ drawSiblingConnector(siblingArray, "Black", 4);
 for (var i = 0; i < siblingArray.length; i++) {
     writeSiblings(siblingArray[i]);
 }
-//generateSiblings(pedigree[0]);
-//createSibling(pedigree[0]);
-
-/*for (var i = 0; i <= 100; i++) {
-    console.log("Testing Randbetween(15,100)" + randBetween(15, 100));
-} */
-
-/*ctx.font = "12px serif";
-ctx.fillStyle = "Red";
-ctx.textAlign = "start";
-var text = ctx.measureText("Poopoo!");
-console.log(text.width);
-ctx.fillText(causeOfDeath(), 100, 200);
-
-ctx.font = "30px Arial";
-text = ctx.measureText("Poopoo!");
-console.log(text.width);
-ctx.fillText("Poopoo!", 150, 300); */
