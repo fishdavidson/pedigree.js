@@ -54,7 +54,8 @@ var pedigree = parentsArray(generatePedigree()); //contains an array of person o
 var containerSiblings = {height: 100,
                          width: 100,
                          spaceBetween: 50,
-                         connectorHeight: 25};
+                         connectorHeight: 25,
+                         headerHeight: 100};
 if (document.getElementById("chkShowSiblings").checked) {
     var siblingArray = generateSiblings(pedigree[0]);
     shuffleArray(siblingArray);
@@ -108,6 +109,10 @@ function calcCanvasHeight () {
     pedChart.stopY = maxHeight;
     maxHeight += canMarginBottom;
     if (document.getElementById("chkShowSiblings").checked) {
+        maxHeight += canMarginTop;
+        containerSiblings.headStartY = maxHeight;
+        maxHeight += containerSiblings.headerHeight;
+        containerSiblings.headStopY = maxHeight;
         maxHeight += canMarginTop;
         containerSiblings.startY = maxHeight;
         maxHeight += containerSiblings.height;
@@ -266,6 +271,13 @@ function drawHeader () {
     } else {
         ctx.fillText("The Lineage of " + pedigree[0].fname + " " + pedigree[0].lname + " (Completed " + formatYear(year) + ")", c.width / 2, 50);
     }
+}
+
+function drawSiblingHeader () {
+    ctx.font = "24px Arial";
+    ctx.fillStyle = "Black";
+    ctx.textAlign = "center";
+    ctx.fillText("Siblings By Birth Order", c.width / 2, containerSiblings.headStartY + (containerSiblings.headerHeight / 2));
 }
 
 function drawProperty (message, x, y, fontSize) {
@@ -843,3 +855,5 @@ drawSiblingConnector(siblingArray, "Black", 4);
 for (var i = 0; i < siblingArray.length; i++) {
     writeSiblings(siblingArray[i]);
 }
+
+drawSiblingHeader();
