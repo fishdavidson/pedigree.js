@@ -49,6 +49,9 @@ var sexualMaturityAge = 16;
 var sexualMaturityEnd = 35;
 var vertSpacer = 25; //minimum vertical space between boxes of the same generation
 var year = document.getElementById("numboxYear").value; //origin year of the pedigree
+var fnameMale = initFnameM();
+var fnameFemale = initFnameF();
+var lastNames = initLastNames();
 
 var pedigree = parentsArray(generatePedigree()); //contains an array of person objects
 var containerSiblings = {height: 100,
@@ -433,6 +436,27 @@ function drawPedigree () {
 function randBetween(a,b){
     // the +1 is to make the range upper inclusive
     return a + Math.floor(Math.random() * (b - a + 1));
+}
+
+function initFnameM () {
+    var arr = [];
+    arr = arr.concat(fnameMaleSSA);
+    arr = arr.concat(fnameMaleExtended);
+    return arr;
+}
+
+function initFnameF () {
+    var arr = [];
+    arr = arr.concat(fnameFemaleSSA);
+    arr = arr.concat(fnameFemaleExtended);
+    return arr;
+}
+
+function initLastNames () {
+    var arr = [];
+    arr = arr.concat(lastNames2010Census);
+    arr = arr.concat(lastNamesExtended);
+    return arr;
 }
 
 function randomFirstName () {
